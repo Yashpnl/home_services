@@ -42,12 +42,12 @@ const SignUp = () => {
                 </p>
 
                 <div className="flex flex-col gap-3 sm:gap-6 pt-8 sm:pt-10">
-                    <Input type="email" placeholder="Email" className="py-4" />
-                    <Input type="password" placeholder="Password" className="py-4" />
+                    <Input type="email" placeholder="Email" className="py-4 text-black placeholder:font-medium placeholder:text-black" />
+                    <Input type="password" placeholder="Password" className="py-4 text-black placeholder:font-medium placeholder:text-black" />
                 </div>
 
                 <div className="pt-5 sm:pt-11 flex items-center gap-2">
-                    <input type="checkbox" className="size-5" />
+                    <input type="checkbox" className="custom-checkbox size-5" />
                     <p className='text-[#5E6278] text-[16px] font-medium'>
                         I Accept the <Link href={'/privacy'} className='text-[#3E97FF]'>
                             Privacy Policy
