@@ -1,8 +1,11 @@
+import Main from './(pages)/(home)/page'
 
-export default function Home() {
+const page = () => {
   return (
     <>
-      Main
+      <Main />
     </>
-  );
+  )
 }
+
+export default page
