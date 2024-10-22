@@ -1,5 +1,6 @@
 import { Raleway } from "next/font/google";
 import "./globals.css";
+import NextTopLoader from "nextjs-toploader";
 
 // Import Raleway font from Google
 const raleway = Raleway({
@@ -21,6 +22,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${raleway.variable} antialiased`}>
+        <NextTopLoader color="#F9AA58"/>
         {children}
       </body>
     </html>
