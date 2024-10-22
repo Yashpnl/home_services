@@ -1,6 +1,10 @@
-import React from 'react'
+"use client"
+import { useRouter } from 'next/navigation'
 
 const DropDownMenu = () => {
+
+    const router = useRouter()
+
     return (
         <div className="bg-white w-[250px] h-[200px] absolute top-28 right-16 rounded-2xl p-5">
             <div
@@ -75,7 +79,8 @@ const DropDownMenu = () => {
                 Help & support
             </div>
             <div
-                className="flex items-center justify-around gap-1 rounded-sm py-3 px-2"
+                onClick={() => router.push('/signin')}
+                className="flex items-center justify-around gap-1 rounded-sm py-3 px-2 cursor-pointer"
                 style={{ boxShadow: '0px 2px 8px 0px #D4E0EB' }}>
                 <svg
                     width={26}
@@ -106,8 +111,6 @@ const DropDownMenu = () => {
                         />
                     </defs>
                 </svg>
-
-
                 Logout
             </div>
         </div>
