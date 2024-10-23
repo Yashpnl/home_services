@@ -1,130 +1,75 @@
 "use client"
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ProviderCard from "./components/ProviderCard"
-
-const ProviderData = [
-    {
-        providerImage: '/logo.png',
-        providerName: "John Deo",
-        providerField: "Electrician",
-        price: "₹ 500",
-        rating: "4.9"
-    },
-    {
-        providerImage: '/logo.png',
-        providerName: "John Deo",
-        providerField: "Electrician",
-        price: "₹ 500",
-        rating: "4.9"
-    },
-    {
-        providerImage: '/logo.png',
-        providerName: "John Deo",
-        providerField: "Electrician",
-        price: "₹ 500",
-        rating: "4.9"
-    },
-    {
-        providerImage: '/logo.png',
-        providerName: "John Deo",
-        providerField: "Electrician",
-        price: "₹ 500",
-        rating: "4.9"
-    },
-    {
-        providerImage: '/logo.png',
-        providerName: "John Deo",
-        providerField: "Electrician",
-        price: "₹ 500",
-        rating: "4.9"
-    },
-    {
-        providerImage: '/logo.png',
-        providerName: "John Deo",
-        providerField: "Electrician",
-        price: "₹ 500",
-        rating: "4.9"
-    },
-    {
-        providerImage: '/logo.png',
-        providerName: "John Deo",
-        providerField: "Electrician",
-        price: "₹ 500",
-        rating: "4.9"
-    },
-    {
-        providerImage: '/logo.png',
-        providerName: "John Deo",
-        providerField: "Electrician",
-        price: "₹ 500",
-        rating: "4.9"
-    },
-    {
-        providerImage: '/logo.png',
-        providerName: "John Deo",
-        providerField: "Electrician",
-        price: "₹ 500",
-        rating: "4.9"
-    },
-    {
-        providerImage: '/logo.png',
-        providerName: "John Deo",
-        providerField: "Electrician",
-        price: "₹ 500",
-        rating: "4.9"
-    },
-    {
-        providerImage: '/logo.png',
-        providerName: "John Deo",
-        providerField: "Electrician",
-        price: "₹ 500",
-        rating: "4.9"
-    },
-    {
-        providerImage: '/logo.png',
-        providerName: "John Deo",
-        providerField: "Electrician",
-        price: "₹ 500",
-        rating: "4.9"
-    },
-]
+import { apiFetch } from "@/lib/apiFetch";
+import toast from "react-hot-toast";
+import { useGlobalContext } from "@/Context/GlobalContext";
 
 const ServiceProviderSection = () => {
 
-    const [showAll, setShowAll] = useState(false);
+    const { results } = useGlobalContext();
 
+    const [showAll, setShowAll] = useState(false);
+    const [allProviders, setAllProviders] = useState([]);
+    const token = localStorage.getItem("homeservice_token");
     const initialServicesToShow = 6;
 
     const handleToggleViewAll = () => {
         setShowAll(!showAll);
     };
 
-    return (
-        <section className="container my-20">
+    const getAllProviders = async () => {
+        try {
+            const response = await apiFetch('/servicepricing/search_services', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+            });
+
+            setAllProviders(response?.data);
+        } catch (error) {
+            const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
+            toast.error(`Error fetching services: ${errorMessage}`);
+        }
+    };
+
+    useEffect(() => {
+        getAllProviders();
+    }, []);
+
+    const providersToShow = results.length > 0 ? results : allProviders;
+
+    return (    
+        <section className="w-[90%] mx-auto my-20">
             <div className="flex items-center justify-between">
-                <h3 className="text-xl font-semibold">Servic Providers</h3>
+                <h3 className="text-xl font-semibold">Service Providers</h3>
                 <button
                     className="text-xl text-primary"
                     onClick={handleToggleViewAll}
                 >
-                    {showAll ? 'View less' : 'View all'}
-                </button>            </div>
+                    {providersToShow?.length >= initialServicesToShow ?
+                        `${showAll ? 'View less' : 'View all'}` : ''
+                    }
+                </button>
+            </div>
 
             <div className="grid sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-5 pt-5">
-                {ProviderData?.slice(0, showAll ? ProviderData.length : initialServicesToShow)
+                {providersToShow?.slice(0, showAll ? providersToShow.length : initialServicesToShow)
                     ?.map((services, serviceskey) => (
                         <ProviderCard
                             key={serviceskey}
-                            providerImage={services?.providerImage}
-                            providerName={services?.providerName}
-                            providerField={services?.providerField}
-                            price={services?.price}
+                            providerImage={services?.image_url}
+                            providerName={services?.service_provider_first_name}
+                            providerField={services?.category_name}
+                            price={services?.servicepricings?.price}
                             rating={services?.rating}
                         />
                     ))}
             </div>
         </section>
-    )
+    );
 }
 
-export default ServiceProviderSection
+export default ServiceProviderSection;
