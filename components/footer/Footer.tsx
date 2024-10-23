@@ -4,7 +4,7 @@ import silogo from '@/assets/si_logo.png'
 
 const Footer = () => {
   return (
-    <footer className="container flex items-center justify-between py-10">
+    <footer className="w-[90%] mx-auto flex flex-col sm:flex-row items-center justify-between gap-5 py-10">
       <div>
         <Image
           src={logo}
