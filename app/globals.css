@@ -100,3 +100,79 @@ body {
   left: 50%;
   transform: translate(-50%, -50%);
 }
+
+/*  */
+.custom-range {
+  -webkit-appearance: none; /* Remove default styling */
+  width: 100%; /* Full width */
+  height: 8px; /* Track height */
+  border-radius: 5px; /* Rounded track */
+  outline: none; /* Remove outline */
+  background: #e0e0e0; /* Default track color */
+}
+
+.custom-range::-webkit-slider-thumb {
+  -webkit-appearance: none; /* Remove default thumb styling */
+  appearance: none; /* Remove default thumb styling */
+  width: 20px; /* Thumb width */
+  height: 20px; /* Thumb height */
+  border-radius: 50%; /* Rounded thumb */
+  background: #0C3469; /* Thumb color */
+  cursor: pointer; /* Change cursor on hover */
+  margin-top: -6px; /* Align thumb to the center of the track */
+}
+
+.custom-range::-moz-range-thumb {
+  width: 20px; /* Thumb width */
+  height: 20px; /* Thumb height */
+  border-radius: 50%; /* Rounded thumb */
+  background: #0C3469; /* Thumb color */
+  cursor: pointer; /* Change cursor on hover */
+  margin-top: -6px; /* Align thumb to the center of the track */
+}
+
+.custom-range::-ms-thumb {
+  width: 20px; /* Thumb width */
+  height: 20px; /* Thumb height */
+  border-radius: 50%; /* Rounded thumb */
+  background: #0C3469; /* Thumb color */
+  cursor: pointer; /* Change cursor on hover */
+  margin-top: -6px; /* Align thumb to the center of the track */
+}
+
+.custom-range::-webkit-slider-runnable-track {
+  height: 8px; /* Track height */
+  border-radius: 5px; /* Rounded track */
+}
+
+.custom-range::-moz-range-track {
+  height: 8px; /* Track height */
+  border-radius: 5px; /* Rounded track */
+}
+
+.custom-range::-ms-track {
+  height: 8px; /* Track height */
+  border-radius: 5px; /* Rounded track */
+  border: none; /* Remove borders */
+  color: transparent; /* Prevent color display */
+}
+
+/*  */
+.react-tel-input .selected-flag {
+  padding-right: 8px !important;
+  background: transparent !important;
+}
+
+.react-tel-input .flag-dropdown.open .selected-flag {
+  background: transparent !important;
+}
+
+.react-tel-input .selected-flag:hover,
+.react-tel-input .selected-flag:focus {
+  background: transparent !important;
+}
+
+.react-tel-input .form-control.invalid-number {
+  background: transparent !important;
+}
+
