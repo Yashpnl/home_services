@@ -6,9 +6,10 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import Link from 'next/link';
 import { useForm } from 'react-hook-form';
-import { apiFetch } from '@/lib/apiFetch';
+import { useRouter } from 'next/navigation';
 
 interface SignUpFormData {
+    first_name: string;
     email: string;
     password: string;
 }
@@ -16,22 +17,17 @@ interface SignUpFormData {
 const SignUp = () => {
 
     const { register, handleSubmit, formState: { errors } } = useForm<SignUpFormData>();
+    const router = useRouter()
 
-    const onSubmit = async (data: SignUpFormData) => {
-        try {
-            const response = await apiFetch('/auth/signin', {
-                method: 'POST',
-                body: JSON.stringify({
-                    email: data.email,
-                    password: data.password,
-                }),
-            });
-            console.log('Sign-in successful:', response);
-        } catch (error) {
-            console.error('Sign-in failed:', error);
-        }
+    const onSubmit = (data: SignUpFormData) => {
+        const queryString = new URLSearchParams({
+            first_name: data.first_name,
+            email: data.email,
+            password: data.password,
+        }).toString();
+
+        router.push(`/phonenumber?${queryString}`);
     };
-
 
     return (
         <main className="container w-full min-h-screen grid xl:grid-cols-2 lg:gap-28 place-content-center bg-white px-5 sm:px-10">
@@ -67,6 +63,23 @@ const SignUp = () => {
                 </p>
 
                 <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-3 sm:gap-6 pt-8 sm:pt-10">
+                    <div className="flex flex-col">
+                        <Input
+                            type="text"
+                            placeholder="First Name"
+                            className="py-4 text-black placeholder:font-medium placeholder:text-black"
+                            {...register('first_name', {
+                                required: 'first_name is required',
+                                minLength: {
+                                    value: 2,
+                                    message: 'First Name is at least 2 characters long',
+                                },
+                            })}
+                        />
+                        {errors.first_name && (
+                            <span className="text-red-600 text-sm">{errors.first_name.message}</span>
+                        )}
+                    </div>
                     <div className="flex flex-col">
                         <Input
                             type="email"

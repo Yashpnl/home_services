@@ -16,7 +16,7 @@ const InputOTP = React.forwardRef<
       "flex items-center gap-2 has-[:disabled]:opacity-50",
       containerClassName
     )}
-    className={cn("disabled:cursor-not-allowed", className)}
+    className={cn("", className)}
     {...props}
   />
 ))
@@ -34,9 +34,15 @@ const InputOTPSlot = React.forwardRef<
   React.ElementRef<"div">,
   React.ComponentPropsWithoutRef<"div"> & { index: number }
 >(({ index, className, ...props }, ref) => {
-  const inputOTPContext = React.useContext(OTPInputContext)
-  const { char, hasFakeCaret, isActive } = inputOTPContext.slots[index]
+  const inputOTPContext = React.useContext(OTPInputContext);
+  
+  // Check if the slot at the given index exists
+  const slot = inputOTPContext.slots[index];
 
+  // Safely destructure char, hasFakeCaret, and isActive only if the slot is defined
+  const char = slot?.char || ''; // Fallback to an empty string if undefined
+  const hasFakeCaret = slot?.hasFakeCaret || false;
+  const isActive = slot?.isActive || false;
   return (
     <div
       ref={ref}
