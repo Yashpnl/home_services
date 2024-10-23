@@ -1,16 +1,17 @@
 import SearchBar from "./SearchBar "
 
 const SearchBox = () => {
+
     return (
-        <main className="container bg-primary rounded-2xl p-10 flex items-center justify-between relative mt-10"
+        <main className="w-[90%] mx-auto bg-primary rounded-2xl py-7 px-7 sm:px-16 sm:py-10 flex flex-col md:flex-row gap-5 items-center justify-between relative mt-10"
             style={{ boxShadow: '0px 1.23px 4.94px 0px #D4E0EB' }}
         >
             <SearchBar />
-            <div className="flex flex-col gap-4">
-                <h2 className="font-extrabold lg:text-4xl text-white">Get 30% off</h2>
-                <h4 className="font-medium lg:text-2xl text-white">Just by Booking Home Services </h4>
+            <div className="flex flex-col gap-1 sm:gap-4 text-center">
+                <h2 className="font-extrabold text-2xl md:text-4xl text-white">Get 30% off</h2>
+                <h4 className="font-medium text-lg md:text-2xl text-white">Just by Booking Home Services </h4>
             </div>
-            <div>
+            <div className="hidden xl:block">
                 <svg className="absolute bottom-0 right-20" width="180" height="233" viewBox="0 0 180 233" fill="none" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
                     <rect width="180" height="233" fill="url(#pattern0_160_9013)" />
                     <defs>
