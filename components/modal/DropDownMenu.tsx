@@ -1,15 +1,13 @@
-"use client"
-import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 
 const DropDownMenu = () => {
 
-    const router = useRouter()
 
     return (
-        <div className="bg-white w-[250px] h-[200px] absolute top-28 right-16 rounded-2xl p-5">
-            <div
-                className="flex items-center justify-center gap-1 rounded-sm py-3 px-2"
-                style={{ boxShadow: '0px 2px 8px 0px #D4E0EB' }}>
+        <div className="bg-white w-[250px] h-[200px] absolute top-1/3 sm:top-28 right-10 sm:right-16 rounded-2xl p-5">
+            <Link
+                href={"/profile"}
+                className="flex items-center justify-around gap-1 rounded-sm py-3 px-2 cursor-pointer shadow-[0px_2px_8px_0px_#D4E0EB]">
                 <svg
                     width={34}
                     height={30}
@@ -39,12 +37,11 @@ const DropDownMenu = () => {
                         />
                     </defs>
                 </svg>
-
-                Edit Profile
-            </div>
-            <div
-                className="flex items-center justify-around gap-1 rounded-sm py-3 px-2"
-                style={{ boxShadow: '0px 2px 8px 0px #D4E0EB' }}>
+                <span className='hover:text-[#0054A5] hover:font-medium'>Edit Profile</span>
+            </Link>
+            <Link
+                href={"/"}
+                className="flex items-center justify-center gap-1 rounded-sm py-3 px-2 cursor-pointer shadow-[0px_2px_8px_0px_#D4E0EB]">
                 <svg
                     width={37}
                     height={30}
@@ -74,14 +71,11 @@ const DropDownMenu = () => {
                         />
                     </defs>
                 </svg>
-
-
-                Help & support
-            </div>
-            <div
-                onClick={() => router.push('/signin')}
-                className="flex items-center justify-around gap-1 rounded-sm py-3 px-2 cursor-pointer"
-                style={{ boxShadow: '0px 2px 8px 0px #D4E0EB' }}>
+                <span className='hover:text-[#0054A5] hover:font-medium'>  Help & support</span>
+            </Link>
+            <Link
+                href={"/sigin"}
+                className="flex items-center justify-around gap-1 rounded-sm py-3 px-2 cursor-pointer shadow-[0px_2px_8px_0px_#D4E0EB]">
                 <svg
                     width={26}
                     height={30}
@@ -111,8 +105,8 @@ const DropDownMenu = () => {
                         />
                     </defs>
                 </svg>
-                Logout
-            </div>
+                <span className='hover:text-[#0054A5] hover:font-medium'> Logout</span>
+            </Link>
         </div>
     )
 }
