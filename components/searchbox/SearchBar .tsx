@@ -37,7 +37,7 @@ const SearchBar = () => {
     return (
         <>
             <div className="relative w-full max-w-md">
-                <div className="flex items-center bg-white shadow-md rounded-full px-4 py-2">
+                <div className="flex items-center bg-white shadow-[0px_2px_8px_0px_#D4E0EB] rounded-lg px-4 py-2">
                     <FaSearch className="text-gray-400 mr-2" />
                     <input
                         type="text"
