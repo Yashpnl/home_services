@@ -7,13 +7,19 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
 import { useState } from 'react';
-import { apiFetch } from '@/lib/apiFetch';
 import toast from 'react-hot-toast';
+import axios, { AxiosError } from 'axios';
+
+interface UserData {
+    token: string;
+}
 
 interface ApiResponse {
     success: boolean;
     message?: string;
+    data?: UserData;
 }
+
 
 const PhoneNumber = () => {
 
@@ -34,6 +40,7 @@ const PhoneNumber = () => {
         return { country_code: countryCode, phone_number: phoneNumber };
     };
 
+    //api of customer register
     const handleVerify = async () => {
         if (!phone || phone.length < 10) {
             setError("Please enter a valid phone number.");
@@ -52,20 +59,38 @@ const PhoneNumber = () => {
             country_code,
         };
 
+        const headers = {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+        };
+
         try {
-            const response = await apiFetch('/users/customer_register', {
-                method: 'POST',
-                body: JSON.stringify(formData),
-            }) as ApiResponse;
+            const response = await axios.post(
+                `${process.env.NEXT_PUBLIC_API_URL}/users/customer_register`,
+                formData,
+                { headers }
+            );
 
-            if (response?.success === true) {
-                localStorage.setItem("homeservice_token", response?.data?.token)
-                const otpResponse = await apiFetch('/users/send_otp', {
-                    method: 'POST',
-                    body: JSON.stringify({ email }),
-                }) as ApiResponse;
+            const data: ApiResponse = response.data;
 
-                if (otpResponse?.success === true) {
+            if (data?.success) {
+                const token = data.data?.token;
+
+                if (token) {
+                    localStorage.setItem("homeservice_token", token);
+                } else {
+                    setError('Failed to retrieve token.');
+                }
+
+                const otpResponse = await axios.post(
+                    `${process.env.NEXT_PUBLIC_API_URL}/users/send_otp`,
+                    { email },
+                    { headers }
+                );
+
+                const otpData: ApiResponse = otpResponse.data;
+
+                if (otpData?.success) {
                     router.push(`/otp?email=${email}`);
                 } else {
                     setError('OTP sending failed. Please try again.');
@@ -74,8 +99,9 @@ const PhoneNumber = () => {
                 setError('Sign-up failed. Please try again.');
             }
         } catch (error) {
-            const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
-            toast.error(`Sign-up or OTP sending failed: ${errorMessage}`);
+            const axiosError = error as AxiosError<ApiResponse>;
+            const errorMessage = axiosError.response?.data.message || 'An unknown error occurred';
+            toast.error(`${errorMessage}`);
             setError('An error occurred. Please try again.');
         }
     };
@@ -114,7 +140,7 @@ const PhoneNumber = () => {
                     <PhoneInput
                         country={'in'}
                         value={phone}
-                        onChange={setPhone} // PhoneInput will add country code to phone number
+                        onChange={setPhone}
                         inputStyle={{
                             width: '100%',
                             borderRadius: '7px',
@@ -130,8 +156,6 @@ const PhoneNumber = () => {
                         isValid={(value) => /^[0-9]{10,14}$/.test(value)}
                     />
                 </div>
-
-                {/* Display error if any */}
                 {error && <p className="text-red-600 text-sm pt-2">{error}</p>}
 
                 <Button
@@ -140,7 +164,6 @@ const PhoneNumber = () => {
                 >
                     Verify
                 </Button>
-
             </div>
         </main>
     );
