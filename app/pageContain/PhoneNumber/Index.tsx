@@ -20,13 +20,11 @@ interface ApiResponse {
     data?: UserData;
 }
 
-
 const PhoneNumber = () => {
-
-    const [phone, setPhone] = useState<string>('')
-    const [error, setError] = useState<string | null>(null)
-    const router = useRouter()
-    const searchParams = useSearchParams()
+    const [phone, setPhone] = useState<string>('');
+    const [error, setError] = useState<string | null>(null);
+    const router = useRouter();
+    const searchParams = useSearchParams();
 
     // Extract form data from URL
     const first_name = searchParams.get('first_name');
@@ -81,20 +79,7 @@ const PhoneNumber = () => {
                 } else {
                     setError('Failed to retrieve token.');
                 }
-
-                const otpResponse = await axios.post(
-                    `${process.env.NEXT_PUBLIC_API_URL}/users/send_otp`,
-                    { email },
-                    { headers }
-                );
-
-                const otpData: ApiResponse = otpResponse.data;
-
-                if (otpData?.success) {
-                    router.push(`/otp?email=${email}`);
-                } else {
-                    setError('OTP sending failed. Please try again.');
-                }
+                router.push(`/otp`);
             } else {
                 setError('Sign-up failed. Please try again.');
             }
@@ -105,7 +90,6 @@ const PhoneNumber = () => {
             setError('An error occurred. Please try again.');
         }
     };
-
 
     return (
         <main className="container w-full min-h-screen grid xl:grid-cols-2 lg:gap-28 place-content-center bg-white px-5 sm:px-10">

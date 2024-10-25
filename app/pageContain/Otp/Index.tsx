@@ -3,25 +3,22 @@ import Image from 'next/image';
 import signin from '@/assets/auth.png';
 import logo from '@/app/favicon.png';
 import { Button } from '@/components/ui/button';
-import { REGEXP_ONLY_DIGITS_AND_CHARS } from 'input-otp';
-import Link from 'next/link';
 import { useState, useEffect } from 'react';
-import { apiFetch } from '@/lib/apiFetch';
 import { useRouter, useSearchParams } from 'next/navigation';
 import toast from 'react-hot-toast';
-
-interface ApiResponse {
-    success: number;
-    message?: string;
-}
+import { auth, RecaptchaVerifier, sendOtpToPhone } from '@/firebase';
+import { PhoneAuthProvider, signInWithCredential } from 'firebase/auth';
+import Link from 'next/link';
 
 const Otp = () => {
 
     const [otp, setOtp] = useState<string[]>(Array(6).fill(''));
     const [countdown, setCountdown] = useState(60);
     const searchParams = useSearchParams();
-    const email = searchParams.get('email');
-    const router = useRouter()
+    const phoneNumber = searchParams.get('phone'); // Assuming phone number is passed via query
+    const router = useRouter();
+
+    const [verificationId, setVerificationId] = useState<string>('');
 
     useEffect(() => {
         const timer = countdown > 0 && setInterval(() => setCountdown(prev => prev - 1), 1000);
@@ -32,8 +29,25 @@ const Otp = () => {
         };
     }, [countdown]);
 
+
+
+    // Inside your Otp component's useEffect
+    useEffect(() => {
+        if (phoneNumber) {
+            const recaptchaContainer = document.getElementById("recaptcha-container"); // Add this container in your JSX
+            sendOtpToPhone(phoneNumber, recaptchaContainer)
+                .then((confirmationResult) => {
+                    setVerificationId(confirmationResult.verificationId);
+                    toast.success("OTP sent successfully!");
+                })
+                .catch((error) => {
+                    toast.error("Failed to send OTP. Please try again.");
+                });
+        }
+    }, [phoneNumber]);
+
     const handleOtpChange = (index: number, value: string) => {
-        if (value.match(REGEXP_ONLY_DIGITS_AND_CHARS) || value === '') {
+        if (/\d/.test(value) || value === '') {
             const newOtp = [...otp];
             newOtp[index] = value;
             setOtp(newOtp);
@@ -51,54 +65,20 @@ const Otp = () => {
     const handleVerify = async () => {
         const otpValue = otp.join('');
         try {
-            const response = await apiFetch('/users/verify_otp', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    email,
-                    otp: otpValue,
-                }),
-            }) as ApiResponse;
-
-            if (response?.success === 200) {
-                toast.success('Verification Successful');
-                router.push('/');
-            } else {
-                toast.error(response?.message?.otp || 'OTP verification failed.');
-            }
+            const credential = PhoneAuthProvider.credential(verificationId, otpValue);
+            await signInWithCredential(auth, credential);
+            toast.success('Verification Successful');
+            router.push('/');
         } catch (error) {
-            const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
-            toast.error(`Error verifying OTP: ${errorMessage}`);
+            console.error('Error verifying OTP:', error);
+            toast.error('OTP verification failed. Please try again.');
         }
     };
 
-    const resendOtp = async () => {
-        try {
-            const response = await apiFetch('/users/send_otp', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    email,
-                }),
-            }) as Response
-
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-
-            const data = await response.json();
-            toast.success('Resend OTP Response:', data);
-
-            setOtp(Array(6).fill(''));
-            setCountdown(60);
-        } catch (error) {
-            const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
-            toast.error(`Error resending OTP: ${errorMessage}`);
-        }
+    const resendOtp = () => {
+        setOtp(Array(6).fill(''));
+        setCountdown(60);
+        sendOtp(new RecaptchaVerifier('recaptcha-container', { size: 'invisible' }, auth)); // Resend OTP
     };
 
     return (
@@ -150,7 +130,7 @@ const Otp = () => {
                             className={`text-[#3E97FF] ${countdown > 0 ? 'pointer-events-none opacity-50' : ''}`}
                             onClick={() => {
                                 if (countdown === 0) {
-                                    resendOtp(); // Call resend OTP function
+                                    resendOtp();
                                 }
                             }}
                         >
@@ -158,6 +138,7 @@ const Otp = () => {
                         </Link>
                     </p>
                 </div>
+                <div id="recaptcha-container"></div>
             </div>
         </main>
     );

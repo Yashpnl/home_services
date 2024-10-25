@@ -25,7 +25,6 @@ const ServiceProviderSection = () => {
 
     const [showAll, setShowAll] = useState(false);
     const [allProviders, setAllProviders] = useState<Provider[]>([]);
-    const token = localStorage.getItem("homeservice_token");
     const initialServicesToShow = 6;
 
     const handleToggleViewAll = () => {
@@ -38,7 +37,7 @@ const ServiceProviderSection = () => {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
+                    'Authorization': `Bearer ${localStorage.getItem("homeservice_token")}`
                 },
             });
 

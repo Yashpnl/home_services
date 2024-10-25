@@ -9,28 +9,60 @@ import { SiApple } from 'react-icons/si';
 import signin from '@/assets/auth.png';
 import logo from '@/app/favicon.png';
 import { useForm } from 'react-hook-form';
+import { useRouter } from 'next/navigation';
+import toast from 'react-hot-toast';
+import { signInWithGoogle } from '@/firebase.js'
 
 interface SignInFormData {
     email: string;
     password: string;
+    provider: string;
+}
+
+interface GoogleSignInResult {
+    user: User | null;
 }
 
 const SignIn = () => {
 
     const { register, handleSubmit, formState: { errors } } = useForm<SignInFormData>();
+    const router = useRouter()
 
     const onSubmit = async (data: SignInFormData) => {
         try {
-            const response = await apiFetch('/auth/signin', {
+            const response = await apiFetch('/users/customer_login', {
                 method: 'POST',
                 body: JSON.stringify({
                     email: data.email,
                     password: data.password,
+                    provider: "",
                 }),
-            });
-            console.log('Sign-in successful:', response);
+            }) as Response
+
+            if (response?.success === true) {
+                toast.success(response?.message || 'Sign-in successful:');
+                router.push("/")
+            }
         } catch (error) {
             console.error('Sign-in failed:', error);
+        }
+    };
+
+    //google signin
+    const handleGoogleSignIn = async () => {
+        try {
+            const result: GoogleSignInResult = await signInWithGoogle();
+
+            if (result?.user) {
+                localStorage.setItem('google_home_services', JSON.stringify(result.user));
+                toast.success('Login successful! Welcome back.');
+                router.push('/');
+            } else {
+                throw new Error('User information missing after Google sign-in.');
+            }
+        } catch (error) {
+            const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
+            toast.error(`Login failed: ${errorMessage}`);
         }
     };
 
@@ -62,7 +94,9 @@ const SignIn = () => {
                 <h2 className="text-xl sm:text-3xl text-[#181C32] font-medium pt-10 xl:pt-16">Sign In</h2>
 
                 <div className="flex flex-col sm:flex-row gap-3 items-center pt-8 xl:pt-14">
-                    <button className="bg-white border-[#E1E3EA] border-2 flex items-center justify-center sm:justify-around gap-5 px-4 py-2 rounded-md min-w-full sm:min-w-[234px]">
+                    <button
+                        onClick={handleGoogleSignIn}
+                        className="bg-white border-[#E1E3EA] border-2 flex items-center justify-center sm:justify-around gap-5 px-4 py-2 rounded-md min-w-full sm:min-w-[234px]">
                         <FcGoogle className="size-6" />
                         <span className="text-[#7E8299] text-sm sm:text-base">Sign in with Google</span>
                     </button>

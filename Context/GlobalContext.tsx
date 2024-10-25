@@ -1,5 +1,5 @@
 "use client";
-import React, { createContext, Dispatch, ReactNode, SetStateAction, useContext, useState } from 'react';
+import React, { createContext, Dispatch, ReactNode, SetStateAction, useContext, useEffect, useState } from 'react';
 
 type ServiceProvider = {
     id: number;
@@ -26,6 +26,7 @@ type ContextType = {
     setResults: Dispatch<SetStateAction<ServiceProvider[]>>;
     filters: FilterState;
     setFilters: Dispatch<SetStateAction<FilterState>>;
+    userInfo: any;
 }
 
 // Create the context
@@ -41,8 +42,17 @@ const GlobalProvider = ({ children }: { children: ReactNode }) => {
         pricing: [250, 5000],
     });
 
+    const [userInfo, setUserInfo] = useState<any>(null);
+
+    useEffect(() => {
+        const storedUserInfo = localStorage.getItem('google_home_services');
+        if (storedUserInfo) {
+            setUserInfo(JSON.parse(storedUserInfo));
+        }
+    }, []);
+
     return (
-        <GlobalContext.Provider value={{ results, setResults, filters, setFilters }}>
+        <GlobalContext.Provider value={{ results, setResults, filters, setFilters, userInfo }}>
             {children}
         </GlobalContext.Provider>
     );

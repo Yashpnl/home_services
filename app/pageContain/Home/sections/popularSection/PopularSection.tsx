@@ -9,7 +9,6 @@ const PopularSection = () => {
 
     const [showAll, setShowAll] = useState(false);
     const [allServices, setAllServices] = useState([]);
-    const token = localStorage.getItem("homeservice_token");
     const initialServicesToShow = 8;
     const { results } = useGlobalContext();
 
@@ -23,7 +22,7 @@ const PopularSection = () => {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
+                    'Authorization': `Bearer ${localStorage.getItem("homeservice_token")}`
                 },
             });
 

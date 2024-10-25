@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 
 interface SignUpFormData {
     first_name: string;
@@ -15,9 +16,23 @@ interface SignUpFormData {
 }
 
 const SignUp = () => {
+    const { register, handleSubmit, setValue, formState: { errors } } = useForm<SignUpFormData>();
+    const router = useRouter();
 
-    const { register, handleSubmit, formState: { errors } } = useForm<SignUpFormData>();
-    const router = useRouter()
+    // Prefill form with stored data
+    useEffect(() => {
+        const savedFirstName = sessionStorage.getItem('first_name') || '';
+        const savedEmail = sessionStorage.getItem('email') || '';
+        const savedPassword = sessionStorage.getItem('password') || '';
+        setValue('first_name', savedFirstName);
+        setValue('email', savedEmail);
+        setValue('password', savedPassword);
+    }, [setValue]);
+
+    // Store input values in sessionStorage
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        sessionStorage.setItem(e.target.name, e.target.value);
+    };
 
     const onSubmit = (data: SignUpFormData) => {
         const queryString = new URLSearchParams({
@@ -28,6 +43,7 @@ const SignUp = () => {
 
         router.push(`/phonenumber?${queryString}`);
     };
+
 
     return (
         <main className="container w-full min-h-screen grid xl:grid-cols-2 lg:gap-28 place-content-center bg-white px-5 sm:px-10">
@@ -75,6 +91,7 @@ const SignUp = () => {
                                     message: 'First Name is at least 2 characters long',
                                 },
                             })}
+                            onChange={handleInputChange}  // Track changes for session storage
                         />
                         {errors.first_name && (
                             <span className="text-red-600 text-sm">{errors.first_name.message}</span>
@@ -92,6 +109,7 @@ const SignUp = () => {
                                     message: 'Enter a valid email address',
                                 },
                             })}
+                            onChange={handleInputChange}  // Track changes for session storage
                         />
                         {errors.email && (
                             <span className="text-red-600 text-sm">{errors.email.message}</span>
@@ -114,6 +132,7 @@ const SignUp = () => {
                                     message: 'Password must contain at least one letter and one number',
                                 },
                             })}
+                            onChange={handleInputChange}  // Track changes for session storage
                         />
                         {errors.password && (
                             <span className="text-red-600 text-sm">{errors.password.message}</span>

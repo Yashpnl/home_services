@@ -1,5 +1,5 @@
 "use client";
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FaSearch, FaSlidersH } from 'react-icons/fa';
 import Modal from '../modal/Modal';
 import FilterBox from './FilterBox ';
@@ -11,7 +11,6 @@ const SearchBar = () => {
 
     const [filter, setFilter] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
-    const token = localStorage.getItem("homeservice_token");
 
     const toggleFilter = () => {
         setFilter(!filter);
@@ -22,7 +21,7 @@ const SearchBar = () => {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
+                'Authorization': `Bearer ${localStorage.getItem("homeservice_token")}`
             },
             body: JSON.stringify({
                 service_name: searchTerm,
