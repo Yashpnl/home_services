@@ -74,7 +74,7 @@ const DropDownMenu = () => {
                 <span className='hover:text-[#0054A5] hover:font-medium'>  Help & support</span>
             </Link>
             <Link
-                href={"/sigin"}
+                href={"/signin"}
                 className="flex items-center justify-around gap-1 rounded-sm py-3 px-2 cursor-pointer shadow-[0px_2px_8px_0px_#D4E0EB]">
                 <svg
                     width={26}
