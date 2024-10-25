@@ -1,21 +1,20 @@
 import Image from "next/image"
 
-const ProviderCard = ({ providerImage, providerName, providerField, price, rating }: { providerImage: string, providerName: string, providerField: string, price: string, rating: string }) => {
+const ProviderCard = ({ providerImage, providerName, providerField, price, rating }: { providerImage: string, providerName: string, providerField: string, price: number, rating: string }) => {
     return (
-        <div className=" flex items-center justify-between flex-col rounded-sm px-10"
-            style={{ boxShadow: '0px 1.23px 4.94px 0px #D4E0EB' }}>
+        <div className="flex items-center justify-center flex-col gap-3 rounded-lg shadow-[0px_1.23px_4.94px_0px_#D4E0EB] w-[250px] h-fit p-3">
             <Image
                 src={providerImage}
                 alt={providerField}
-                className="pt-8 size-24 object-cover"
+                className="object-cover w-[230px] h-[100px] rounded-lg"
                 width={100}
                 height={100}
             />
             <p className="flex items-center gap-1 text-left w-full">
-                <span className="border-r border-r-primary text-xl">{providerName}</span>
-                <span className="text-xs font-medium">{providerField}</span>
+                <span className="border-r border-r-primary text-xl pr-5">{providerName}</span>
+                <span className="text-xs font-medium pl-5">{providerField}</span>
             </p>
-            <p className="pb-4 flex items-center justify-between w-full">
+            <p className="flex items-center justify-between w-full">
                 <span className="text-primary font-bold text-2xl">{price}</span>
                 <span className="flex items-center gap-1">
                     <svg width="16" height="15" viewBox="0 0 16 15" fill="none" xmlns="http://www.w3.org/2000/svg">
