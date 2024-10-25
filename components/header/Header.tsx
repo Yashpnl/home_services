@@ -6,19 +6,21 @@ import { RiShoppingBag4Line } from "react-icons/ri";
 import { IoMdArrowDropdown } from "react-icons/io";
 import { HiMenuAlt3 } from "react-icons/hi";
 import { IoMdClose } from "react-icons/io";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Modal from "../modal/Modal";
 import DropDownMenu from "../modal/DropDownMenu";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useGlobalContext } from "@/Context/GlobalContext";
 
 const Header = () => {
 
   const pathname = usePathname();
-
-  const [isLoggedin, setisLoggedin] = useState(true);
+  const [isLoggedin, setisLoggedin] = useState('');
   const [showModal, setShowModal] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { userInfo } = useGlobalContext();
+  const googleToken = userInfo?.stsTokenManager?.accessToken
 
   const handleModal = () => {
     setShowModal(!showModal);
@@ -27,6 +29,12 @@ const Header = () => {
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
+
+  useEffect(() => {
+    if (googleToken) {
+      setisLoggedin(googleToken);
+    }
+  }, [googleToken]);
 
   return (
     <>
@@ -44,7 +52,7 @@ const Header = () => {
         {/* Desktop */}
         <div className="hidden md:flex items-center gap-10">
           <div className="flex flex-col gap-1 items-center">
-            <Link href={'/order'} className="flex items-center gap-4 cursor-pointer">
+            <Link href={'/order'} className="flex items-center gap-1 cursor-pointer">
               <RiShoppingBag4Line className="text-secondary size-6" />
               <p className="text-xl">Order</p>
             </Link>
@@ -56,14 +64,21 @@ const Header = () => {
 
           {isLoggedin ? (
             <div className="flex items-center gap-1 cursor-pointer" onClick={handleModal}>
-              <p className="text-xl">Eva John</p>
+              <Image
+                src={userInfo?.photoURL}
+                alt={userInfo?.displayName}
+                className="size-10 rounded-full shadow-[0px_2px_8px_0px_#D4E0EB] border-2 border-white"
+                width={40}
+                height={40}
+              />
+              <p className="text-xl">{userInfo?.displayName}</p>
               <IoMdArrowDropdown className="text-secondary size-10" />
             </div>
           ) : (
-            <div className="flex items-center gap-4 cursor-pointer">
+            <Link href={'/signin'} className="flex items-center gap-4 cursor-pointer">
               <TbLogin2 className="text-secondary size-6" />
               <p className="text-xl">Login</p>
-            </div>
+            </Link>
           )}
         </div>
 
