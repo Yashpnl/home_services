@@ -3,17 +3,14 @@ import Image from "next/image";
 import React, { useState } from "react";
 import serviceProviderImg1 from "@/assets/serviceProviderImg1.png";
 import serviceProviderImg2 from "@/assets/serviceProviderImg2.png";
-
 import serviceProviderImg3 from "@/assets/serviceProviderImg3.png";
-
 import serviceProviderImg4 from "@/assets/serviceProviderImg4.png";
-
 import serviceProviderImg5 from "@/assets/serviceProviderImg5.png";
 import { useRouter } from "next/navigation";
 
 const ServiceProviderImage = () => {
 
-  const router=useRouter();
+  const router = useRouter();
 
   const serviceProviderImg = [
     serviceProviderImg1,
@@ -27,7 +24,7 @@ const ServiceProviderImage = () => {
 
   console.log(selectedImg)
 
-  router.push(`?image=${selectedImg}`)
+  router.push(`?image=${selectedImg?.blurDataURL}`)
 
   return (
     <>
@@ -37,11 +34,10 @@ const ServiceProviderImage = () => {
             {serviceProviderImg?.map((img, index) => (
               <div
                 key={index}
-                className={`${
-                  serviceProviderImg[index] === selectedImg
-                    ? "border-2 rounded-[10px] border-blue-500 h-24 w-24 flex justify-center items-center p-1"
-                    : " "
-                }`}
+                className={`${serviceProviderImg[index] === selectedImg
+                  ? "border-2 rounded-[10px] border-primary size-16 flex justify-center items-center p-1"
+                  : " "
+                  }`}
               >
                 <Image
                   src={img}
@@ -49,10 +45,17 @@ const ServiceProviderImage = () => {
                   width={100}
                   height={100}
                   onClick={() => setSelectedImg(serviceProviderImg[index])}
-                  className={`cursor-pointer rounded-[10px]  h-24 w-24  object-contain `}
+                  className={`cursor-pointer rounded-[10px] size-16 object-contain `}
                 />
               </div>
             ))}
+            {/* <span className="text-[#0054A5] font-medium underline w-full flex items-center justify-end"
+          onClick={handleToggleViewAll}>
+          {data?.length >= initialServicesToShow ?
+            `${showAll ? 'View Less' : 'View More'}` : ''
+          }
+        </span> */}
+            <span className="text-[#0054A5] font-medium underline text-xs">View More</span>
           </div>
           <div className="bg-[#FEF7EE] shadow-[0px_1.23px_4.94px_0px_#D4E0EB] rounded-[20px] min-h-[550px] flex items-end w-full">
             <Image

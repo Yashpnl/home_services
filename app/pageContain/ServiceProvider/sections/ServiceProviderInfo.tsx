@@ -1,20 +1,30 @@
-import React from "react";
+import { Button } from "@/components/ui/button";
 
-const ServiceProviderInfo = () => {
+const ServiceProviderInfo = ({ handlePackges, providerName, providerField, startTime, endTime, bio }: { handlePackges: any, providerName: string, providerField: string, startTime: string, endTime: string, bio: string }) => {
     return (
         <>
-            <div className="rounded-[20px] shadow-[0px_1.23px_4.94px_0px_#D4E0EB] flex gap-8 p-5">
-                <div className="border-r pr-5">
-                    <h1>Lita Logan</h1>
-                    <span>Plumber</span>
-                    <span>Available</span>
-                    <div>
-                        <span>7:00AM</span>
-                        <span>To</span>
-                        <span>10:00PM</span>
+            <div className="rounded-[20px] shadow-[0px_1.23px_4.94px_0px_#D4E0EB] grid 2xl:grid-cols-3 gap-8 py-5 px-12">
+                <div className="2xl:border-r pr-5 flex flex-col gap-2 text-[#565656]">
+                    <h1 className="font-semibold text-2xl">{providerName}</h1>
+                    <span>{providerField}</span>
+                    <span className="pt-2 font-semibold text-xl">Available</span>
+                    <div className="flex items-center gap-4">
+                        <span className="shadow-[0px_1.23px_4.94px_0px_#D4E0EB] rounded-md p-2">{startTime}</span>
+                        <span className="text-[#919191]">To</span>
+                        <span className="shadow-[0px_1.23px_4.94px_0px_#D4E0EB] rounded-md p-2">{endTime}</span>
                     </div>
                 </div>
-                <div>Bio</div>
+                <div className="text-[#565656]">
+                    <span className="font-semibold text-xl">Bio</span>
+                    {bio}
+                </div>
+                <div className="flex items-center justify-center w-full">
+                    <Button className="text-[#0C3469] text-lg font-bold bg-[#F9AA58] rounded-full py-4 sm:py-7 w-full"
+                        onClick={handlePackges}
+                    >
+                        Book
+                    </Button>
+                </div>
             </div>
         </>
     );
