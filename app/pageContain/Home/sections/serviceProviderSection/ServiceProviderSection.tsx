@@ -4,6 +4,7 @@ import ProviderCard from "./components/ProviderCard"
 import { apiFetch } from "@/lib/apiFetch";
 import toast from "react-hot-toast";
 import { useGlobalContext } from "@/Context/GlobalContext";
+import { useRouter } from "next/navigation";
 
 interface Provider {
     id: number;
@@ -21,6 +22,7 @@ interface ApiResponse {
 
 const ServiceProviderSection = () => {
 
+    const router = useRouter()
     const { results } = useGlobalContext();
 
     const [showAll, setShowAll] = useState(false);
@@ -70,17 +72,17 @@ const ServiceProviderSection = () => {
             </div>
 
             <div className="grid sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-5 pt-5">
-                {providersToShow?.slice(0, showAll ? providersToShow.length : initialServicesToShow)
-                    ?.map((services, serviceskey) => (
-                        <ProviderCard
-                            key={serviceskey}
-                            providerImage={services?.image_url}
-                            providerName={services?.service_provider_first_name}
-                            providerField={services?.category_name}
-                            price={services?.servicepricings?.price}
-                            rating={services?.rating}
-                        />
-                    ))}
+                {providersToShow?.slice(0, showAll ? providersToShow.length : initialServicesToShow)?.map((services) => (
+                    <ProviderCard
+                        key={services.id}
+                        providerImage={services?.image_url}
+                        providerName={services?.service_provider_first_name}
+                        providerField={services?.category_name}
+                        price={services?.servicepricings?.price}
+                        rating={services?.rating}
+                        onClick={() => router.push(`/service-provider/${services?.id}`)}
+                    />
+                ))}
             </div>
         </section>
     );

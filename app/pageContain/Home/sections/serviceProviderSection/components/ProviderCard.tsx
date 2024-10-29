@@ -1,8 +1,26 @@
 import Image from "next/image"
 
-const ProviderCard = ({ providerImage, providerName, providerField, price, rating }: { providerImage: string, providerName: string, providerField: string, price: number, rating: string }) => {
+interface ProviderCardProps {
+    providerImage: string;
+    providerName: string;
+    providerField: string;
+    price: number;
+    rating: string;
+    onClick: () => void;  // Add this prop
+}
+
+const ProviderCard: React.FC<ProviderCardProps> = ({
+    providerImage,
+    providerName,
+    providerField,
+    price,
+    rating,
+    onClick,
+}) => {
+
     return (
-        <div className="flex items-center justify-center flex-col gap-3 rounded-lg shadow-[0px_1.23px_4.94px_0px_#D4E0EB] w-[250px] h-fit p-3">
+        <div className="flex items-center justify-center flex-col gap-3 rounded-lg shadow-[0px_1.23px_4.94px_0px_#D4E0EB] w-[250px] h-fit p-3 cursor-pointer"
+            onClick={onClick}>
             <Image
                 src={providerImage}
                 alt={providerField}
