@@ -1,12 +1,13 @@
 import Image from "next/image"
+import { ReactNode } from "react";
 
 interface ProviderCardProps {
     providerImage: string;
     providerName: string;
     providerField: string;
-    price: number;
-    rating: string;
-    onClick: () => void;  // Add this prop
+    price: ReactNode;  
+    rating: string | number;
+    onClick: () => void; 
 }
 
 const ProviderCard: React.FC<ProviderCardProps> = ({

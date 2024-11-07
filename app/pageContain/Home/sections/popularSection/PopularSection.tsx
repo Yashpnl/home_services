@@ -29,7 +29,6 @@ const PopularSection = () => {
             setAllServices(response?.data)
         } catch (error) {
             const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
-            toast.error(`Error fetching services: ${errorMessage}`);
         }
     };
 

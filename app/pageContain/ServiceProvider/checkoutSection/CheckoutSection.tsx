@@ -6,16 +6,16 @@ const CheckoutSection = () => {
         <>
             <div className="width-container">
                 <div className="grid grid-cols-[35rem_1fr] gap-10">
-                    <div className="rounded-[20px] shadow-[0px_1.23px_4.94px_0px_#D4E0EB] p-7 flex flex-col gap-5">
+                    <div className="rounded-[20px] shadow-[0px_1.23px_4.94px_0px_#D4E0EB] p-7 flex flex-col gap-5 h-fit">
                         <h1 className="font-semibold text-xl">Account</h1>
                         <span className="text-sm">To book the service, please login or sign up</span>
-                        <Link href={'/signup'} className="text-[#0C3469] text-lg font-bold bg-[#F9AA58] rounded-full p-3 flex items-center justify-center">
+                        <Link href={'/signin '} className="text-[#0C3469] text-lg font-bold bg-[#F9AA58] rounded-full p-2 flex items-center justify-center">
                             Login
                         </Link>
                     </div>
 
-                    <div className="grid grid-rows-2 gap-7">
-                        <div className="rounded-[20px] shadow-[0px_1.23px_4.94px_0px_#D4E0EB] py-5 px-7 h-fit">
+                    <div className="flex flex-col gap-7">
+                        <div className="rounded-[20px] shadow-[0px_1.23px_4.94px_0px_#D4E0EB] py-5 px-7 h-fit min-h-[188px]">
                             <div className="flex gap-5 justify-between">
                                 <div className="flex flex-col lg:w-[70%] w-full">
                                     <span className="font-medium">{'pkg.name'}</span>
@@ -39,7 +39,7 @@ const CheckoutSection = () => {
                                     calendar
                                 </div>
                             </div>
-                            <Button className="text-[#0C3469] text-lg font-bold bg-[#F9AA58] rounded-full py-4 sm:py-7 sm:px-20 w-full mt-10">
+                            <Button className="text-[#0C3469] text-lg font-bold bg-[#F9AA58] rounded-full py-4 sm:py-6 sm:px-20 w-full my-20">
                                 Book
                             </Button>
                         </div>

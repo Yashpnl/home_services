@@ -2,7 +2,6 @@
 import { useEffect, useState } from "react";
 import ProviderCard from "./components/ProviderCard"
 import { apiFetch } from "@/lib/apiFetch";
-import toast from "react-hot-toast";
 import { useGlobalContext } from "@/Context/GlobalContext";
 import { useRouter } from "next/navigation";
 
@@ -11,8 +10,8 @@ interface Provider {
     image_url: string;
     service_provider_first_name: string;
     category_name: string;
-    servicepricings: number;
-    price: number;
+    servicepricings: any;
+    price: number | { price: number };  
     rating: string;
 }
 
@@ -23,11 +22,10 @@ interface ApiResponse {
 const ServiceProviderSection = () => {
 
     const router = useRouter()
-    const { results } = useGlobalContext();
-
+    const { results = [] } = useGlobalContext();
     const [showAll, setShowAll] = useState(false);
     const [allProviders, setAllProviders] = useState<Provider[]>([]);
-    const initialServicesToShow = 6;
+    const initialServicesToShow = 5;
 
     const handleToggleViewAll = () => {
         setShowAll(!showAll);
@@ -43,13 +41,11 @@ const ServiceProviderSection = () => {
                 },
             });
 
-            setAllProviders(response?.data);
+            setAllProviders(Array.isArray(response.data) ? response.data : []);
         } catch (error) {
-            const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
-            toast.error(`Error fetching services: ${errorMessage}`);
+            error instanceof Error ? error.message : 'An unknown error occurred';
         }
     };
-
 
     useEffect(() => {
         getAllProviders();
@@ -71,14 +67,14 @@ const ServiceProviderSection = () => {
                 </button>
             </div>
 
-            <div className="grid sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-5 pt-5">
+            <div className="grid sm:grid-cols-2 md:grid-cols-3 2xl:grid-cols-5 gap-5 pt-5">
                 {providersToShow?.slice(0, showAll ? providersToShow.length : initialServicesToShow)?.map((services) => (
                     <ProviderCard
                         key={services.id}
                         providerImage={services?.image_url}
                         providerName={services?.service_provider_first_name}
                         providerField={services?.category_name}
-                        price={services?.servicepricings?.price}
+                        price={services?.servicepricings[0]?.price}
                         rating={services?.rating}
                         onClick={() => router.push(`/service-provider/${services?.id}`)}
                     />
