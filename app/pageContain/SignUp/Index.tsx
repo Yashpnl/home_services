@@ -7,7 +7,8 @@ import { Input } from '@/components/ui/input';
 import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { FiLoader } from 'react-icons/fi';
 
 interface SignUpFormData {
     first_name: string;
@@ -16,10 +17,11 @@ interface SignUpFormData {
 }
 
 const SignUp = () => {
+
     const { register, handleSubmit, setValue, formState: { errors } } = useForm<SignUpFormData>();
     const router = useRouter();
+    const [loading, setLoading] = useState(false)
 
-    // Prefill form with stored data
     useEffect(() => {
         const savedFirstName = sessionStorage.getItem('first_name') || '';
         const savedEmail = sessionStorage.getItem('email') || '';
@@ -34,16 +36,11 @@ const SignUp = () => {
         sessionStorage.setItem(e.target.name, e.target.value);
     };
 
-    const onSubmit = (data: SignUpFormData) => {
-        const queryString = new URLSearchParams({
-            first_name: data.first_name,
-            email: data.email,
-            password: data.password,
-        }).toString();
-
-        router.push(`/phonenumber?${queryString}`);
+    const onSubmit = () => {
+        setLoading(true)
+        router.push(`/phonenumber`);
+        setLoading(false)
     };
-
 
     return (
         <main className="container w-full min-h-screen grid xl:grid-cols-2 lg:gap-28 place-content-center bg-white px-5 sm:px-10">
@@ -149,7 +146,7 @@ const SignUp = () => {
                     </div>
 
                     <Button type="submit" className="text-[#0C3469] text-lg font-bold bg-[#F9AA58] mt-12 sm:mt-16 rounded-full py-4 sm:py-5">
-                        Sign Up
+                        {loading ? <FiLoader className='animate-spin size-10' /> : 'Sign Up'}
                     </Button>
                 </form>
 

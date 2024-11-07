@@ -1,7 +1,6 @@
 "use client"
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { apiFetch } from '@/lib/apiFetch';
 import Image from 'next/image';
 import Link from 'next/link';
 import { FcGoogle } from 'react-icons/fc';
@@ -11,7 +10,10 @@ import logo from '@/app/favicon.png';
 import { useForm } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
-import { signInWithGoogle } from '@/firebase.js'
+import axios from 'axios';
+import { signInWithGoogle } from '@/lib/firebase';
+import { User } from 'firebase/auth';
+import Cookies from "js-cookie";
 
 interface SignInFormData {
     email: string;
@@ -29,18 +31,17 @@ const SignIn = () => {
     const router = useRouter()
 
     const onSubmit = async (data: SignInFormData) => {
-        try {
-            const response = await apiFetch('/users/customer_login', {
-                method: 'POST',
-                body: JSON.stringify({
-                    email: data.email,
-                    password: data.password,
-                    provider: "",
-                }),
-            }) as Response
 
-            if (response?.success === true) {
-                toast.success(response?.message || 'Sign-in successful:');
+        try {
+            const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/users/customer_login`, {
+                email: data?.email,
+                password: data?.password,
+                provider: "",
+            })
+            if (response?.data?.success === true) {
+                localStorage.setItem("homeservice_token", response?.data?.data?.token);
+                Cookies.set("homeservice_token", response?.data?.data?.token);
+                toast.success('Sign-in successful');
                 router.push("/")
             }
         } catch (error) {

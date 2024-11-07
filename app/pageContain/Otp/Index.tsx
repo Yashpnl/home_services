@@ -4,81 +4,39 @@ import signin from '@/assets/auth.png';
 import logo from '@/app/favicon.png';
 import { Button } from '@/components/ui/button';
 import { useState, useEffect } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
-import { auth, RecaptchaVerifier, sendOtpToPhone } from '@/firebase';
-import { PhoneAuthProvider, signInWithCredential } from 'firebase/auth';
-import Link from 'next/link';
+import {
+    InputOTP,
+    InputOTPGroup,
+    InputOTPSeparator,
+    InputOTPSlot,
+} from "@/components/ui/input-otp"
+import { FiLoader } from 'react-icons/fi';
+import { useGlobalContext } from '@/Context/GlobalContext';
 
 const Otp = () => {
 
-    const [otp, setOtp] = useState<string[]>(Array(6).fill(''));
-    const [countdown, setCountdown] = useState(60);
-    const searchParams = useSearchParams();
-    const phoneNumber = searchParams.get('phone'); // Assuming phone number is passed via query
     const router = useRouter();
+    const [otp, setOtp] = useState('');
+    const [loading, setLoading] = useState(false)
+    const { confirmationResult } = useGlobalContext();
 
-    const [verificationId, setVerificationId] = useState<string>('');
+    const verifyOtp = async () => {
 
-    useEffect(() => {
-        const timer = countdown > 0 && setInterval(() => setCountdown(prev => prev - 1), 1000);
-        return () => {
-            if (timer) {
-                clearInterval(timer);
-            }
-        };
-    }, [countdown]);
+        if (confirmationResult) {
 
-
-
-    // Inside your Otp component's useEffect
-    useEffect(() => {
-        if (phoneNumber) {
-            const recaptchaContainer = document.getElementById("recaptcha-container"); // Add this container in your JSX
-            sendOtpToPhone(phoneNumber, recaptchaContainer)
-                .then((confirmationResult) => {
-                    setVerificationId(confirmationResult.verificationId);
-                    toast.success("OTP sent successfully!");
-                })
-                .catch((error) => {
-                    toast.error("Failed to send OTP. Please try again.");
-                });
-        }
-    }, [phoneNumber]);
-
-    const handleOtpChange = (index: number, value: string) => {
-        if (/\d/.test(value) || value === '') {
-            const newOtp = [...otp];
-            newOtp[index] = value;
-            setOtp(newOtp);
-
-            if (value !== '' && index < otp.length - 1) {
-                const nextInput = document.getElementById(`otp-${index + 1}`) as HTMLInputElement;
-                nextInput?.focus();
-            } else if (value === '' && index > 0) {
-                const prevInput = document.getElementById(`otp-${index - 1}`) as HTMLInputElement;
-                prevInput?.focus();
+            setLoading(true)
+            try {
+                await confirmationResult.confirm(otp);
+                toast.success("Verification successful! User signed in");
+                setLoading(false)
+                router.push("/");
+            } catch (error) {
+                setLoading(false)
+                console.error("Error verifying OTP:", error);
             }
         }
-    };
-
-    const handleVerify = async () => {
-        const otpValue = otp.join('');
-        try {
-            const credential = PhoneAuthProvider.credential(verificationId, otpValue);
-            await signInWithCredential(auth, credential);
-            toast.success('Verification Successful');
-            router.push('/');
-        } catch (error) {
-            console.error('Error verifying OTP:', error);
-            toast.error('OTP verification failed. Please try again.');
-        }
-    };
-
-    const resendOtp = () => {
-        setOtp(Array(6).fill(''));
-        setCountdown(60);
-        sendOtp(new RecaptchaVerifier('recaptcha-container', { size: 'invisible' }, auth)); // Resend OTP
     };
 
     return (
@@ -102,43 +60,30 @@ const Otp = () => {
                     <span className="whitespace-nowrap text-[#A1A5B7]">Enter your OTP to verify</span>
                     <span className="w-[40%] h-[1px] bg-[#EFF2F5]" />
                 </p>
-                <div className="flex items-center justify-center pt-8 sm:pt-10">
-                    {otp.map((digit, index) => (
-                        <input
-                            key={index}
-                            id={`otp-${index}`}
-                            type="text"
-                            value={digit}
-                            onChange={(e) => handleOtpChange(index, e.target.value)}
-                            maxLength={1}
-                            className="mx-1 w-12 h-12 text-center text-xl border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        />
-                    ))}
+
+                <div className='flex items-center justify-center py-10 w-full'>
+                    <InputOTP maxLength={6} value={otp} onChange={(value) => setOtp(value)}>
+                        <InputOTPGroup>
+                            <InputOTPSlot index={0} />
+                            <InputOTPSlot index={1} />
+                            <InputOTPSlot index={2} />
+                        </InputOTPGroup>
+                        <InputOTPSeparator />
+                        <InputOTPGroup>
+                            <InputOTPSlot index={3} />
+                            <InputOTPSlot index={4} />
+                            <InputOTPSlot index={5} />
+                        </InputOTPGroup>
+                    </InputOTP>
                 </div>
+
                 <Button
-                    onClick={handleVerify}
-                    className="text-[#0C3469] text-lg font-bold bg-[#F9AA58] mt-12 sm:mt-16 rounded-full py-4 sm:py-5"
+                    onClick={verifyOtp}
+                    className="text-[#0C3469] text-lg font-bold bg-[#F9AA58] mt-4 rounded-full py-4 sm:py-5"
+                    disabled={otp.length !== 6}
                 >
-                    Verify
+                    {loading ? <FiLoader className='animate-spin size-10' /> : 'Verify OTP'}
                 </Button>
-                <div className="pt-5 sm:pt-11 flex items-center justify-center gap-2">
-                    <span className='rounded-full border border-[#0054A5] px-1'>{countdown}</span>
-                    <p className='text-[#5E6278] text-[16px] font-medium'>
-                        Did not receive the code?{' '}
-                        <Link
-                            href={'#'}
-                            className={`text-[#3E97FF] ${countdown > 0 ? 'pointer-events-none opacity-50' : ''}`}
-                            onClick={() => {
-                                if (countdown === 0) {
-                                    resendOtp();
-                                }
-                            }}
-                        >
-                            Send again
-                        </Link>
-                    </p>
-                </div>
-                <div id="recaptcha-container"></div>
             </div>
         </main>
     );

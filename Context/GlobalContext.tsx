@@ -1,4 +1,5 @@
 "use client";
+import { ConfirmationResult } from 'firebase/auth';
 import React, { createContext, Dispatch, ReactNode, SetStateAction, useContext, useEffect, useState } from 'react';
 
 type ServiceProvider = {
@@ -27,6 +28,8 @@ type ContextType = {
     filters: FilterState;
     setFilters: Dispatch<SetStateAction<FilterState>>;
     userInfo: any;
+    confirmationResult: ConfirmationResult | null;
+    setConfirmationResult: React.Dispatch<React.SetStateAction<null | ConfirmationResult>>
 }
 
 // Create the context
@@ -43,6 +46,7 @@ const GlobalProvider = ({ children }: { children: ReactNode }) => {
     });
 
     const [userInfo, setUserInfo] = useState<any>(null);
+    const [confirmationResult, setConfirmationResult] = useState<null | ConfirmationResult>(null);
 
     useEffect(() => {
         const storedUserInfo = localStorage.getItem('google_home_services');
@@ -52,7 +56,7 @@ const GlobalProvider = ({ children }: { children: ReactNode }) => {
     }, []);
 
     return (
-        <GlobalContext.Provider value={{ results, setResults, filters, setFilters, userInfo }}>
+        <GlobalContext.Provider value={{ results, setResults, filters, setFilters, userInfo, confirmationResult, setConfirmationResult }}>
             {children}
         </GlobalContext.Provider>
     );

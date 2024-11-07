@@ -3,12 +3,17 @@ import Image from 'next/image';
 import signin from '@/assets/auth.png';
 import logo from '@/app/favicon.png';
 import { Button } from '@/components/ui/button';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
-import axios, { AxiosError } from 'axios';
+import axios from 'axios';
+import { auth } from '@/lib/firebase';
+import { RecaptchaVerifier, signInWithPhoneNumber } from 'firebase/auth';
+import { FiLoader } from 'react-icons/fi';
+import { useGlobalContext } from '@/Context/GlobalContext';
+import Cookies from "js-cookie";
 
 interface UserData {
     token: string;
@@ -21,15 +26,17 @@ interface ApiResponse {
 }
 
 const PhoneNumber = () => {
+
     const [phone, setPhone] = useState<string>('');
     const [error, setError] = useState<string | null>(null);
     const router = useRouter();
-    const searchParams = useSearchParams();
+    const [loading, setLoading] = useState(false)
+    const { setConfirmationResult } = useGlobalContext();
 
-    // Extract form data from URL
-    const first_name = searchParams.get('first_name');
-    const email = searchParams.get('email');
-    const password = searchParams.get('password');
+    // Extract form data from session storage
+    const first_name = sessionStorage.getItem('first_name')
+    const email = sessionStorage.getItem('email')
+    const password = sessionStorage.getItem('password')
 
     const extractPhoneDetails = (fullPhoneNumber: string) => {
         const countryCode = fullPhoneNumber.substring(0, fullPhoneNumber.length - 10);
@@ -38,7 +45,6 @@ const PhoneNumber = () => {
         return { country_code: countryCode, phone_number: phoneNumber };
     };
 
-    //api of customer register
     const handleVerify = async () => {
         if (!phone || phone.length < 10) {
             setError("Please enter a valid phone number.");
@@ -46,50 +52,39 @@ const PhoneNumber = () => {
         }
 
         setError(null);
-
         const { country_code, phone_number } = extractPhoneDetails(phone);
-
-        const formData = {
-            first_name,
-            email,
-            password,
-            phone_number,
-            country_code,
-        };
-
-        const headers = {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-        };
+        const formData = { first_name, email, password, phone_number, country_code };
 
         try {
+            setLoading(true)
             const response = await axios.post(
                 `${process.env.NEXT_PUBLIC_API_URL}/users/customer_register`,
                 formData,
-                { headers }
+                { headers: { 'Content-Type': 'application/json' } }
             );
 
-            const data: ApiResponse = response.data;
+            if (response.data?.success) {
+                localStorage.setItem("homeservice_token", response?.data?.data?.token);
+                Cookies.set("homeservice_token", response?.data?.data?.token);
 
-            if (data?.success) {
-                const token = data.data?.token;
-
-                if (token) {
-                    localStorage.setItem("homeservice_token", token);
-                } else {
-                    setError('Failed to retrieve token.');
+                if (phone_number) {
+                    const recaptcha = new RecaptchaVerifier(auth, "recaptcha", { size: "invisible" });
+                    const confirmationResult = await signInWithPhoneNumber(auth, `+${country_code}` + phone_number, recaptcha);
+                    setConfirmationResult(confirmationResult);
+                    router.push('/otp');
                 }
-                router.push(`/otp`);
             } else {
                 setError('Sign-up failed. Please try again.');
             }
-        } catch (error) {
-            const axiosError = error as AxiosError<ApiResponse>;
-            const errorMessage = axiosError.response?.data.message || 'An unknown error occurred';
-            toast.error(`${errorMessage}`);
+            setLoading(false)
+        } catch (error: any) {
+            setLoading(false)
+            toast.error(error.response?.data?.message || 'An error occurred. Please try again.');
             setError('An error occurred. Please try again.');
         }
     };
+
+
 
     return (
         <main className="container w-full min-h-screen grid xl:grid-cols-2 lg:gap-28 place-content-center bg-white px-5 sm:px-10">
@@ -146,9 +141,10 @@ const PhoneNumber = () => {
                     className="text-[#0C3469] text-lg font-bold bg-[#F9AA58] mt-12 sm:mt-28 rounded-full py-4 sm:py-5"
                     onClick={handleVerify}
                 >
-                    Verify
+                    {loading ? <FiLoader className='animate-spin size-10' /> : 'Verify'}
                 </Button>
             </div>
+            <div id="recaptcha"></div>
         </main>
     );
 };
