@@ -9,7 +9,7 @@ export function middleware(request: NextRequest) {
     // --
     const { pathname } = request.nextUrl
     // --
-    const cookieData = cookies().get("homeservice_token")?.value;
+    const cookieData = cookies().get("homeservice_token")?.value || cookies().get("google_home_services")?.value;
 
     // --
     const loginUser = cookieData ? cookieData : null
@@ -29,5 +29,5 @@ export function middleware(request: NextRequest) {
 
 // See "Matching Paths" below to learn more
 export const config = {
-    matcher: [...authRoutes,"/"]
+    matcher: [...authRoutes, "/"]
 }
