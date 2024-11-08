@@ -1,6 +1,6 @@
 "use client"
 import { Button } from '@/components/ui/button';
-import { apiFetch } from '@/lib/apiFetch';
+import axios from 'axios';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
@@ -12,44 +12,32 @@ const ProfileSection = () => {
     const { register, handleSubmit, setValue, formState: { errors }, clearErrors } = useForm();
     const [selectedImage, setSelectedImage] = useState(null);
     const [state, setState] = useState('')  // For (Used PhoneNumber Library)PhoneNumber Input Field 
+    const token = localStorage.getItem("homeservice_token")
+    const userId = localStorage.getItem("userId")
 
     const onSubmit = async (data) => {
         try {
-            // if (!userId) {
-            //     toast.error('User ID is not available.');
-            //     return;
-            // }
+            const requestBody = {
+                id: userId,
+                first_name: data.first_name,
+                last_name: data.last_name,
+                email: data.email,
+                phone_number: data.phone_number,
+                date_of_birth: data.date_of_birth,
+            };
+            const headers = {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            };
 
-            // const requestBody = {
-            //     name: data.name,
-            //     email: data.email,
-            //     bio: data.bio,
-            //     phone: data.phone,
-            //     address: {
-            //         city: data.city
-            //     },
-            //     socialMediaLinks: {
-            //         facebook: inputValues.facebook,
-            //         twitter: inputValues.twitter,
-            //         linkedin: inputValues.linkedin,
-            //         youtube: inputValues.youtube
-            //     },
-            //     profilePic: selectedImage
-            //         ? [{
-            //             url: selectedImage,
-            //             primary: true
-            //         }]
-            //         : []
-            // };
+            const res = await axios.post(`https://homeservices.bestflutterteam.com/api/users/update_profile`, requestBody, { headers });
 
-            // const res = await apiFetch(`/users/profiles`, 'put', requestBody, token);
-
-            // if (res?.success) {
-            //     toast.success(res?.message || "Profile updated successfully!");
-            //     router.push("/")
-            // } else {
-            //     toast.error(res?.message || "Failed to update profile.");
-            // }
+            if (res?.data?.success) {
+                toast.success(res?.data?.message || "Profile updated successfully!");
+            } else {
+                toast.error(res?.data?.message || "Failed to update profile.");
+            }
         } catch (error) {
             console.error("API Error:", error);
             toast.error("An error occurred while updating the profile.");
@@ -108,7 +96,7 @@ const ProfileSection = () => {
                                     <label htmlFor="name">Name</label>
                                     <input
                                         type="text"
-                                        {...register("name", {
+                                        {...register("first_name", {
                                             required: "Name is required",
                                             minLength: {
                                                 value: 2,
@@ -122,14 +110,14 @@ const ProfileSection = () => {
                                         }}
                                         placeholder="Enter your name"
                                     />
-                                    {errors.name && <p className="text-red-600">{errors.name.message}</p>}
+                                    {errors.first_name && <p className="text-red-600">{errors.first_name.message}</p>}
                                 </div>
 
                                 <div className="w-full md:w-1/2 flex flex-col gap-2">
-                                    <label htmlFor="dob">Date of Birth</label>
+                                    <label htmlFor="date_of_birth">Date of Birth</label>
                                     <input
                                         type="date"
-                                        {...register("dob", {
+                                        {...register("date_of_birth", {
                                             required: "dob is required",
                                             minLength: {
                                                 value: 2,
@@ -143,7 +131,7 @@ const ProfileSection = () => {
                                         }}
                                         placeholder="Enter your city"
                                     />
-                                    {errors.city && <p className="text-red-600">{errors.city.message}</p>}
+                                    {errors.date_of_birth && <p className="text-red-600">{errors.date_of_birth.message}</p>}
                                 </div>
                             </div>
 
@@ -171,7 +159,7 @@ const ProfileSection = () => {
                                 </div>
                                 {/* Phone Number Input with Country Code */}
                                 <div className="w-full md:w-1/2 flex flex-col gap-2">
-                                    <label htmlFor="phone">Phone Number</label>
+                                    <label htmlFor="phone_number">Phone Number</label>
                                     <PhoneInput
                                         inputStyle={{
                                             width: '100%',
@@ -186,39 +174,28 @@ const ProfileSection = () => {
                                             border: "none",
                                         }}
                                         placeholder="Enter your phone number"
-                                        country={'gb'}
+                                        country={'in'}
                                         value={state}
                                         onChange={(e) => {
                                             setState(e);
-                                            setValue('phone', e);
-                                            clearErrors('phone');
+                                            setValue('phone_number', e);
+                                            clearErrors('phone_number');
                                         }}
                                     />
                                     <input
                                         type="hidden"
-                                        {...register('phone', {
-                                            required: "Phone number is required",
-                                            minLength: {
-                                                value: 4,
-                                                message: "Phone number at least 4 digit"
-                                            },
-                                            maxLength: {
-                                                value: 12,
-                                                message: "Phone number at most 12 digit"
-                                            },
-                                        },
-                                        )}
+                                        {...register('phone_number')}
                                     />
 
-                                    {errors.phone && (
-                                        <p className="text-red-500 text-left px-1">{errors.phone.message}</p>
+                                    {errors.phone_number && (
+                                        <p className="text-red-500 text-left px-1">{errors.phone_number.message}</p>
                                     )}
                                 </div>
                             </div>
                         </div>
 
                         <span className='flex items-center justify-center w-full md:w-[20%]'>
-                            <Button type="submit" className="text-[#0C3469] text-base font-bold bg-[#F9AA58] rounded-full py-4 sm:py-6 w-full">
+                            <Button className="text-[#0C3469] text-base font-bold bg-[#F9AA58] rounded-full py-4 sm:py-6 w-full">
                                 Save
                             </Button>
                         </span>

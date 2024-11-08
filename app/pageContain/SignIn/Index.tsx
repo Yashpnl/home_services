@@ -48,6 +48,7 @@ const SignIn = () => {
                 localStorage.setItem("homeservice_token", response?.data?.data?.token);
                 setHomeserviceToken(response?.data?.data?.token)
                 localStorage.setItem("homeservice_username", response?.data?.data?.customer?.first_name);
+                localStorage.setItem("userId", response?.data?.data?.customer?.id);
                 Cookies.set("homeservice_token", response?.data?.data?.token);
                 toast.success('Sign-in successful');
                 router.push('/')
