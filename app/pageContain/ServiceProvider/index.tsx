@@ -8,11 +8,21 @@ import PackagesSection from "./sections/PackagesSection";
 interface Provider {
   id: number;
   image_url: string;
+  serviceimages: string;
   service_provider_first_name: string;
   category_name: string;
   servicepricings: number;
+  workingtimes: any;
   price: number;
   rating: string;
+  description: string;
+  total_order: string;
+  experience: string;
+  c_name: string;
+  review: string;
+  date: string;
+  c_photo: string;
+  star: string;
 }
 
 const ServiceProvider = ({ provider, providerId }: { provider: Provider, providerId: string }) => {

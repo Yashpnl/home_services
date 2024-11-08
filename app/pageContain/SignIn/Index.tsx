@@ -14,6 +14,9 @@ import axios from 'axios';
 import { signInWithGoogle } from '@/lib/firebase';
 import { User } from 'firebase/auth';
 import Cookies from "js-cookie";
+import { useState } from 'react';
+import { FiLoader } from 'react-icons/fi';
+import { useGlobalContext } from '@/Context/GlobalContext';
 
 interface SignInFormData {
     email: string;
@@ -29,10 +32,13 @@ const SignIn = () => {
 
     const { register, handleSubmit, formState: { errors } } = useForm<SignInFormData>();
     const router = useRouter()
+    const [loading, setLoading] = useState(false)
+    const { setHomeserviceToken } = useGlobalContext();
 
     const onSubmit = async (data: SignInFormData) => {
 
         try {
+            setLoading(true)
             const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/users/customer_login`, {
                 email: data?.email,
                 password: data?.password,
@@ -40,11 +46,15 @@ const SignIn = () => {
             })
             if (response?.data?.success === true) {
                 localStorage.setItem("homeservice_token", response?.data?.data?.token);
+                setHomeserviceToken(response?.data?.data?.token)
+                localStorage.setItem("homeservice_username", response?.data?.data?.customer?.first_name);
                 Cookies.set("homeservice_token", response?.data?.data?.token);
                 toast.success('Sign-in successful');
-                router.push("/")
+                router.push('/')
+                setLoading(false)
             }
         } catch (error) {
+            setLoading(false)
             console.error('Sign-in failed:', error);
         }
     };
@@ -56,6 +66,8 @@ const SignIn = () => {
 
             if (result?.user) {
                 localStorage.setItem('google_home_services', JSON.stringify(result.user));
+                const accessToken = (result.user as any)?.stsTokenManager?.accessToken;
+                Cookies.set("google_home_services", accessToken);
                 toast.success('Login successful! Welcome back.');
                 router.push('/');
             } else {
@@ -78,10 +90,7 @@ const SignIn = () => {
                 quality={100}
             />
 
-            <div
-                className="bg-white w-full mx-auto lg:max-w-[685px] px-16 xl:px-24 py-10 xl:py-14 border-3 border-white flex flex-col rounded-2xl lg:my-16 shadow-lg"
-                style={{ boxShadow: '0px 1.27px 63.56px 0px #00000026', backdropFilter: 'blur(89.37px)' }}
-            >
+            <div className="bg-white w-full mx-auto sm:w-[685px] lg:max-w-[685px] px-16 xl:px-24 py-10 xl:py-14 border-3 border-white flex flex-col rounded-2xl lg:my-16 shadow-[0px_1.27px_63.56px_0px_#00000026] backdrop-blur-[89.37px] min-h-screen sm:min-h-fit">
                 <div className='xl:hidden flex items-center justify-center gap-5 pt-2'>
                     <Image
                         src={logo}
@@ -94,7 +103,7 @@ const SignIn = () => {
                 </div>
                 <h2 className="text-xl sm:text-3xl text-[#181C32] font-medium pt-10 xl:pt-16">Sign In</h2>
 
-                <div className="flex flex-col sm:flex-row gap-3 items-center pt-8 xl:pt-14">
+                <div className="flex flex-col sm:flex-row gap-3 items-center justify-center pt-8 xl:pt-14">
                     <button
                         onClick={handleGoogleSignIn}
                         className="bg-white border-[#E1E3EA] border-2 flex items-center justify-center sm:justify-around gap-5 px-4 py-2 rounded-md min-w-full sm:min-w-[234px]">
@@ -155,16 +164,10 @@ const SignIn = () => {
                     </div>
 
                     <div className="pt-5 sm:pt-11 flex items-center gap-2">
-                        <input type="checkbox" className="custom-checkbox size-5" />
-                        <p className='text-[#5E6278] text-[16px] font-medium'>
-                            I Accept the <Link href={'/privacy'} className='text-[#3E97FF]'>
-                                Privacy Policy
-                            </Link>
-                        </p>
                     </div>
 
-                    <Button type="submit" className="text-[#0C3469] text-lg font-bold bg-[#F9AA58] mt-12 sm:mt-16 rounded-full py-4 sm:py-5">
-                        Login
+                    <Button type="submit" className="text-[#0C3469] text-lg font-bold bg-[#F9AA58] mt-3 sm:mt-16 rounded-full py-4 sm:py-5">
+                        {loading ? <FiLoader className='animate-spin size-10' /> : 'Signin'}
                     </Button>
                 </form>
 

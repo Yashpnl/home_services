@@ -9,11 +9,7 @@ interface ServicePricing {
     price: string;
 }
 
-interface PackagesSectionProps {
-    servicepricings: ServicePricing[];
-}
-
-const PackagesSection = ({ servicepricings, providerId }: { servicepricings: PackagesSectionProps, providerId: string }) => {
+const PackagesSection = ({ servicepricings, providerId }: { servicepricings: number, providerId: string }) => {
 
     const router = useRouter()
     const [quantities, setQuantities] = useState<number[]>(servicepricings.map(() => 1));

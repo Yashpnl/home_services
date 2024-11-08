@@ -49,7 +49,7 @@ const Otp = () => {
                 height={900}
                 quality={100}
             />
-            <div className="bg-white w-full mx-auto lg:max-w-[685px] px-16 xl:px-24 py-10 xl:py-14 border-3 border-white flex flex-col rounded-2xl lg:my-16 shadow-lg">
+            <div className="bg-white w-full mx-auto sm:w-[685px] lg:max-w-[685px] px-16 xl:px-24 py-10 xl:py-14 border-3 border-white flex flex-col rounded-2xl lg:my-16 shadow-[0px_1.27px_63.56px_0px_#00000026] backdrop-blur-[89.37px] min-h-screen sm:min-h-fit">
                 <div className='xl:hidden flex items-center justify-center gap-5 pt-2'>
                     <Image src={logo} alt="home services" width={50} height={50} quality={100} />
                     <h2 className="text-xl sm:text-3xl text-[#181C32] font-semibold">Home Services</h2>

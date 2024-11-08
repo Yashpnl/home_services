@@ -54,9 +54,7 @@ const SignUp = () => {
             />
 
             <div
-                className="bg-white w-full mx-auto lg:max-w-[685px] px-16 xl:px-24 py-10 xl:py-14 border-3 border-white flex flex-col rounded-2xl lg:my-16 shadow-lg"
-                style={{ boxShadow: '0px 1.27px 63.56px 0px #00000026', backdropFilter: 'blur(89.37px)' }}
-            >
+                className="bg-white w-full mx-auto sm:w-[685px] lg:max-w-[685px] px-16 xl:px-24 py-10 xl:py-14 border-3 border-white flex flex-col rounded-2xl lg:my-16 shadow-[0px_1.27px_63.56px_0px_#00000026] backdrop-blur-[89.37px] min-h-screen sm:min-h-fit">
                 <div className='xl:hidden flex items-center justify-center gap-5 pt-2'>
                     <Image
                         src={logo}
@@ -68,12 +66,6 @@ const SignUp = () => {
                     <h2 className=" text-xl sm:text-3xl text-[#181C32] font-semibold">Home Services</h2>
                 </div>
                 <h2 className="text-xl sm:text-3xl text-[#181C32] font-medium pt-10 xl:pt-16">Sign Up</h2>
-
-                <p className="flex items-center gap-1 pt-8 sm:pt-10">
-                    <span className="w-[40%] h-[1px] bg-[#EFF2F5]" />
-                    <span className="whitespace-nowrap text-[#A1A5B7]">Or with email</span>
-                    <span className="w-[40%] h-[1px] bg-[#EFF2F5]" />
-                </p>
 
                 <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-3 sm:gap-6 pt-8 sm:pt-10">
                     <div className="flex flex-col">
@@ -137,15 +129,9 @@ const SignUp = () => {
                     </div>
 
                     <div className="pt-5 sm:pt-11 flex items-center gap-2">
-                        <input type="checkbox" className="custom-checkbox size-5" />
-                        <p className='text-[#5E6278] text-[16px] font-medium'>
-                            I Accept the <Link href={'/privacy'} className='text-[#3E97FF]'>
-                                Privacy Policy
-                            </Link>
-                        </p>
                     </div>
 
-                    <Button type="submit" className="text-[#0C3469] text-lg font-bold bg-[#F9AA58] mt-12 sm:mt-16 rounded-full py-4 sm:py-5">
+                    <Button type="submit" className="text-[#0C3469] text-lg font-bold bg-[#F9AA58] mt-3 sm:mt-16 rounded-full py-4 sm:py-5">
                         {loading ? <FiLoader className='animate-spin size-10' /> : 'Sign Up'}
                     </Button>
                 </form>

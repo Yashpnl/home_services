@@ -11,7 +11,7 @@ interface Provider {
     service_provider_first_name: string;
     category_name: string;
     servicepricings: any;
-    price: number | { price: number };  
+    price: number | { price: number };
     rating: string;
 }
 
@@ -23,6 +23,7 @@ const ServiceProviderSection = () => {
 
     const router = useRouter()
     const { results = [] } = useGlobalContext();
+    // const token = localStorage.getItem("homeservice_token") || cookies().get("google_home_services")
     const [showAll, setShowAll] = useState(false);
     const [allProviders, setAllProviders] = useState<Provider[]>([]);
     const initialServicesToShow = 5;
@@ -67,7 +68,7 @@ const ServiceProviderSection = () => {
                 </button>
             </div>
 
-            <div className="grid sm:grid-cols-2 md:grid-cols-3 2xl:grid-cols-5 gap-5 pt-5">
+            <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5 gap-5 pt-5">
                 {providersToShow?.slice(0, showAll ? providersToShow.length : initialServicesToShow)?.map((services) => (
                     <ProviderCard
                         key={services.id}

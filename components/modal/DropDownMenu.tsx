@@ -1,7 +1,29 @@
+"use client"
 import Link from 'next/link'
+import Cookies from 'js-cookie';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import { FiLoader } from 'react-icons/fi';
 
 const DropDownMenu = () => {
 
+    const router = useRouter();
+    const [loading, setLoading] = useState(false)
+
+    const handleLogout = () => {
+        setLoading(true)
+        // Remove items from localStorage
+        localStorage.removeItem('homeservice_token');
+        localStorage.removeItem('google_home_services');
+
+        // Remove cookie
+        Cookies.remove('homeservice_token');
+        Cookies.remove('google_home_services');
+
+        // Redirect to /signin
+        router.push('/signin');
+        setLoading(false)
+    };
 
     return (
         <div className="bg-white w-[250px] h-[200px] absolute top-1/3 sm:top-28 right-10 sm:right-16 rounded-2xl p-5">
@@ -73,8 +95,8 @@ const DropDownMenu = () => {
                 </svg>
                 <span className='hover:text-[#0054A5] hover:font-medium'>  Help & support</span>
             </Link>
-            <Link
-                href={"/signin"}
+            <div
+                onClick={handleLogout}
                 className="flex items-center justify-around gap-1 rounded-sm py-3 px-2 cursor-pointer shadow-[0px_2px_8px_0px_#D4E0EB]">
                 <svg
                     width={26}
@@ -105,8 +127,10 @@ const DropDownMenu = () => {
                         />
                     </defs>
                 </svg>
-                <span className='hover:text-[#0054A5] hover:font-medium'> Logout</span>
-            </Link>
+                <span className='hover:text-[#0054A5] hover:font-medium'>
+                    {loading ? <FiLoader className='animate-spin size-10 text-black' /> : 'Logout'}
+                </span>
+            </div>
         </div>
     )
 }

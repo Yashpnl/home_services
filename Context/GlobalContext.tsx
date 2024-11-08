@@ -28,6 +28,8 @@ type ContextType = {
     filters: FilterState;
     setFilters: Dispatch<SetStateAction<FilterState>>;
     userInfo: any;
+    homeserviceToken: string | null;
+    setHomeserviceToken: (value: string) => void;
     confirmationResult: ConfirmationResult | null;
     setConfirmationResult: React.Dispatch<React.SetStateAction<null | ConfirmationResult>>
 }
@@ -37,6 +39,7 @@ const GlobalContext = createContext<ContextType | null>(null);
 
 // Create a provider component
 const GlobalProvider = ({ children }: { children: ReactNode }) => {
+
     const [results, setResults] = useState<ServiceProvider[]>([]);
     const [filters, setFilters] = useState<FilterState>({
         selectedServiceType: 'ALL',
@@ -46,17 +49,23 @@ const GlobalProvider = ({ children }: { children: ReactNode }) => {
     });
 
     const [userInfo, setUserInfo] = useState<any>(null);
+    const [homeserviceToken, setHomeserviceToken] = useState<string | null>(null);
     const [confirmationResult, setConfirmationResult] = useState<null | ConfirmationResult>(null);
 
     useEffect(() => {
-        const storedUserInfo = localStorage.getItem('google_home_services');
-        if (storedUserInfo) {
-            setUserInfo(JSON.parse(storedUserInfo));
+        const storedGoogleInfo = localStorage.getItem('google_home_services');
+        const storedHomeserviceToken = localStorage.getItem('homeservice_token');
+
+        if (storedGoogleInfo) {
+            setUserInfo(JSON.parse(storedGoogleInfo));
         }
-    }, []);
+        if (storedHomeserviceToken) {
+            setHomeserviceToken(storedHomeserviceToken);
+        }
+    }, [homeserviceToken, userInfo]);
 
     return (
-        <GlobalContext.Provider value={{ results, setResults, filters, setFilters, userInfo, confirmationResult, setConfirmationResult }}>
+        <GlobalContext.Provider value={{ results, setResults, filters, setFilters, userInfo, homeserviceToken, setHomeserviceToken, confirmationResult, setConfirmationResult }}>
             {children}
         </GlobalContext.Provider>
     );

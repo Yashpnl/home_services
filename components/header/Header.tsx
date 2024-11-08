@@ -16,10 +16,11 @@ import { useGlobalContext } from "@/Context/GlobalContext";
 const Header = () => {
 
   const pathname = usePathname();
-  const [isLoggedin, setisLoggedin] = useState('');
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userName, setUserName] = useState<string | null>('');
   const [showModal, setShowModal] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const { userInfo } = useGlobalContext();
+  const { userInfo, homeserviceToken } = useGlobalContext();
   const googleToken = userInfo?.stsTokenManager?.accessToken
 
   const handleModal = () => {
@@ -31,10 +32,13 @@ const Header = () => {
   };
 
   useEffect(() => {
-    if (googleToken) {
-      setisLoggedin(googleToken);
+    if (googleToken || homeserviceToken) {
+      setIsLoggedIn(true);
+      setUserName(localStorage.getItem('homeservice_username'))
+    } else {
+      setIsLoggedIn(false);
     }
-  }, [googleToken]);
+  }, [googleToken, homeserviceToken]);
 
   return (
     <>
@@ -62,16 +66,21 @@ const Header = () => {
             }
           </div>
 
-          {isLoggedin ? (
+          {isLoggedIn ? (
             <div className="flex items-center gap-1 cursor-pointer" onClick={handleModal}>
-              <Image
-                src={userInfo?.photoURL}
-                alt={userInfo?.displayName}
-                className="size-10 rounded-full shadow-[0px_2px_8px_0px_#D4E0EB] border-2 border-white"
-                width={40}
-                height={40}
-              />
-              <p className="text-xl">{userInfo?.displayName}</p>
+              {userInfo?.photoURL ? (
+                <Image
+                  src={userInfo?.photoURL}
+                  alt={userInfo?.displayName || userName}
+                  className="size-10 rounded-full shadow-[0px_2px_8px_0px_#D4E0EB] border-2 border-white"
+                  width={40}
+                  height={40}
+                />) : (
+                <span className="flex items-center justify-center bg-black text-white rounded-full size-10">
+                  {userName && userName.charAt(0).toUpperCase()}
+                </span>
+              )}
+              <p className="text-xl">{userName || userInfo?.displayName}</p>
               <IoMdArrowDropdown className="text-secondary size-10" />
             </div>
           ) : (
@@ -103,7 +112,7 @@ const Header = () => {
               <p className="sm:text-xl">Order</p>
             </div>
 
-            {isLoggedin ? (
+            {isLoggedIn ? (
               <div className="flex items-center gap-1 cursor-pointer" onClick={handleModal}>
                 <p className="sm:text-xl">Eva John</p>
                 <IoMdArrowDropdown className="text-secondary size-10" />
