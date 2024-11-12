@@ -30,12 +30,14 @@ const ServiceProviderReview = ({
   return (
     <div className="rounded-[20px] shadow-[0px_1.23px_4.94px_0px_#D4E0EB] w-full p-3">
       {/* Show toggle for more reviews */}
-      <span
-        className="text-[#0054A5] font-medium underline w-full flex items-center justify-end cursor-pointer"
-        onClick={handleToggleViewAll}
-      >
-        {showAll ? 'See less' : 'See more'}
-      </span>
+      {review?.length > 4 &&
+        <span
+          className="text-[#0054A5] font-medium underline w-full flex items-center justify-end cursor-pointer"
+          onClick={handleToggleViewAll}
+        >
+          {showAll ? 'See less' : 'See more'}
+        </span>
+      }
 
       <div className="flex flex-col 2xl:flex-row w-full gap-4 pb-3 px-9">
         <div className="2xl:border-r flex flex-col gap-2 text-[#565656] w-full 2xl:w-[31%]">

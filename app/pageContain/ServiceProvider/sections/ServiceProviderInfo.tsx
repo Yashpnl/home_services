@@ -12,7 +12,7 @@ interface ProviderInfoProps {
 }
 
 const ServiceProviderInfo = ({ handlePackges, provider }: ProviderInfoProps) => {
-    
+
   const { providerName, providerField, startTime, endTime, bio } = provider;
 
   return (

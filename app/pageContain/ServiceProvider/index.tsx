@@ -8,11 +8,12 @@ import PackagesSection from "./sections/PackagesSection";
 interface Provider {
   id: number;
   image_url: string;
+  banner_url: string;
   serviceimages: string;
   service_provider_first_name: string;
   category_name: string;
   servicepricings: number;
-  workingtimes: any;
+  working_time: any;
   price: number;
   rating: string;
   description: string;
@@ -26,6 +27,15 @@ interface Provider {
 }
 
 const ServiceProvider = ({ provider, providerId }: { provider: Provider, providerId: string }) => {
+
+  const providerData = {
+    providerImage: provider?.banner_url,
+    providerName: provider?.service_provider_first_name,
+    providerCategory: provider?.category_name,
+  };
+
+  localStorage.setItem("providerData", JSON.stringify(providerData));
+
 
   const [packages, setPackges] = useState(false);
 
@@ -41,8 +51,8 @@ const ServiceProvider = ({ provider, providerId }: { provider: Provider, provide
           <ServiceProviderInfo handlePackges={handlePackges} provider={{
             providerName: provider.service_provider_first_name,
             providerField: provider.category_name,
-            startTime: provider?.workingtimes[0]?.start_time,
-            endTime: provider?.workingtimes[0]?.end_time,
+            startTime: provider?.working_time[0]?.date?.start_time,
+            endTime: provider?.working_time[0]?.end_time,
             bio: provider?.description
           }} />
           <ServiceProviderReview
@@ -60,6 +70,7 @@ const ServiceProvider = ({ provider, providerId }: { provider: Provider, provide
           <div />
           {packages && <PackagesSection providerId={providerId} servicepricings={provider.servicepricings} />}
         </div>
+        <pre>{JSON.stringify(provider, null, 2)}</pre>
       </div>
     </>
   );

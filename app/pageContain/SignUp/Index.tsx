@@ -9,12 +9,21 @@ import { useForm } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { FiLoader } from 'react-icons/fi';
+import { FcGoogle } from 'react-icons/fc';
+import { SiApple } from 'react-icons/si';
+import { User } from 'firebase/auth';
+import { signInWithGoogle } from '@/lib/firebase';
+import Cookies from "js-cookie";
 
 interface SignUpFormData {
     first_name: string;
     email: string;
     password: string;
 }
+
+// interface GoogleSignInResult {
+//     user: User | null;
+// }
 
 const SignUp = () => {
 
@@ -35,6 +44,23 @@ const SignUp = () => {
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         sessionStorage.setItem(e.target.name, e.target.value);
     };
+
+    //google signin
+    // const handleGoogleSignIn = async () => {
+    //     try {
+    //         const result: GoogleSignInResult = await signInWithGoogle();
+
+    //         if (result?.user) {
+    //             localStorage.setItem('google_home_services', JSON.stringify(result.user));
+    //             const accessToken = (result.user as any)?.stsTokenManager?.accessToken;
+    //             Cookies.set("google_home_services", accessToken);
+    //         } else {
+    //             throw new Error('User information missing after Google sign-in.');
+    //         }
+    //     } catch (error) {
+    //         const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
+    //     }
+    // };
 
     const onSubmit = () => {
         setLoading(true)
@@ -66,6 +92,25 @@ const SignUp = () => {
                     <h2 className=" text-xl sm:text-3xl text-[#181C32] font-semibold">Home Services</h2>
                 </div>
                 <h2 className="text-xl sm:text-3xl text-[#181C32] font-medium pt-10 xl:pt-16">Sign Up</h2>
+
+                {/* <div className="flex flex-col sm:flex-row gap-3 items-center justify-center pt-8 xl:pt-14">
+                    <button
+                        onClick={handleGoogleSignIn}
+                        className="bg-white border-[#E1E3EA] border-2 flex items-center justify-center sm:justify-around gap-5 px-4 py-2 rounded-md min-w-full sm:min-w-[234px]">
+                        <FcGoogle className="size-6" />
+                        <span className="text-[#7E8299] text-sm sm:text-base">Sign in with Google</span>
+                    </button>
+                    <button className="bg-[#F9F9F9] border-[#E1E3EA] border-2 flex items-center justify-center sm:justify-around gap-5 px-4 py-2 rounded-md min-w-full sm:min-w-[234px]">
+                        <SiApple className="size-6" />
+                        <span className="text-[#7E8299] text-sm sm:text-base">Sign in with Apple</span>
+                    </button>
+                </div>
+
+                <p className="flex items-center gap-1 pt-8 sm:pt-10">
+                    <span className="w-[40%] h-[1px] bg-[#EFF2F5]" />
+                    <span className="whitespace-nowrap text-[#A1A5B7]">Or with email</span>
+                    <span className="w-[40%] h-[1px] bg-[#EFF2F5]" />
+                </p> */}
 
                 <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-3 sm:gap-6 pt-8 sm:pt-10">
                     <div className="flex flex-col">

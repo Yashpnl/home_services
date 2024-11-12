@@ -1,32 +1,36 @@
 "use client"
 import { useEffect, useState } from "react";
 import ServiceCard from "./components/ServiceCard"
-import { apiFetch } from "@/lib/apiFetch";
-import toast from "react-hot-toast";
 import { useGlobalContext } from "@/Context/GlobalContext";
+import axios from "axios";
+
+type Service = {
+    category_url: string;
+    category_name: string;
+};
 
 const PopularSection = () => {
 
     const [showAll, setShowAll] = useState(false);
-    const [allServices, setAllServices] = useState([]);
+    const [allServices, setAllServices] = useState<Service[]>([]);
     const initialServicesToShow = 8;
     const { results } = useGlobalContext();
-
+    const storedData = JSON.parse(localStorage.getItem("homeservice_userData") || '{}');
+    const token = storedData?.token;
     const handleToggleViewAll = () => {
         setShowAll(!showAll);
     };
 
     const getAllServices = async () => {
         try {
-            const response = await apiFetch('/categorys/category_details', {
-                method: 'GET',
+            const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/categorys/category_details`, {
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${localStorage.getItem("homeservice_token")}`
+                    'Authorization': `Bearer ${token}`
                 },
             });
 
-            setAllServices(response?.data)
+            setAllServices(response?.data?.data)
         } catch (error) {
             const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
         }

@@ -34,7 +34,8 @@ const Header = () => {
   useEffect(() => {
     if (googleToken || homeserviceToken) {
       setIsLoggedIn(true);
-      setUserName(localStorage.getItem('homeservice_username'))
+      const storedData = JSON.parse(localStorage.getItem("homeservice_userData") || '{}');
+      setUserName(storedData?.username)
     } else {
       setIsLoggedIn(false);
     }

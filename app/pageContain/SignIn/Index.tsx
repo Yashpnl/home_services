@@ -3,16 +3,12 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import Image from 'next/image';
 import Link from 'next/link';
-import { FcGoogle } from 'react-icons/fc';
-import { SiApple } from 'react-icons/si';
 import signin from '@/assets/auth.png';
 import logo from '@/app/favicon.png';
 import { useForm } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
 import axios from 'axios';
-import { signInWithGoogle } from '@/lib/firebase';
-import { User } from 'firebase/auth';
 import Cookies from "js-cookie";
 import { useState } from 'react';
 import { FiLoader } from 'react-icons/fi';
@@ -22,10 +18,6 @@ interface SignInFormData {
     email: string;
     password: string;
     provider: string;
-}
-
-interface GoogleSignInResult {
-    user: User | null;
 }
 
 const SignIn = () => {
@@ -45,10 +37,14 @@ const SignIn = () => {
                 provider: "",
             })
             if (response?.data?.success === true) {
-                localStorage.setItem("homeservice_token", response?.data?.data?.token);
                 setHomeserviceToken(response?.data?.data?.token)
-                localStorage.setItem("homeservice_username", response?.data?.data?.customer?.first_name);
-                localStorage.setItem("userId", response?.data?.data?.customer?.id);
+                const userData = {
+                    token: response?.data?.data?.token,
+                    username: response?.data?.data?.customer?.first_name,
+                    userId: response?.data?.data?.customer?.id
+                };
+
+                localStorage.setItem("homeservice_userData", JSON.stringify(userData));
                 Cookies.set("homeservice_token", response?.data?.data?.token);
                 toast.success('Sign-in successful');
                 router.push('/')
@@ -57,26 +53,6 @@ const SignIn = () => {
         } catch (error) {
             setLoading(false)
             console.error('Sign-in failed:', error);
-        }
-    };
-
-    //google signin
-    const handleGoogleSignIn = async () => {
-        try {
-            const result: GoogleSignInResult = await signInWithGoogle();
-
-            if (result?.user) {
-                localStorage.setItem('google_home_services', JSON.stringify(result.user));
-                const accessToken = (result.user as any)?.stsTokenManager?.accessToken;
-                Cookies.set("google_home_services", accessToken);
-                toast.success('Login successful! Welcome back.');
-                router.push('/');
-            } else {
-                throw new Error('User information missing after Google sign-in.');
-            }
-        } catch (error) {
-            const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
-            toast.error(`Login failed: ${errorMessage}`);
         }
     };
 
@@ -103,25 +79,6 @@ const SignIn = () => {
                     <h2 className=" text-xl sm:text-3xl text-[#181C32] font-semibold">Home Services</h2>
                 </div>
                 <h2 className="text-xl sm:text-3xl text-[#181C32] font-medium pt-10 xl:pt-16">Sign In</h2>
-
-                <div className="flex flex-col sm:flex-row gap-3 items-center justify-center pt-8 xl:pt-14">
-                    <button
-                        onClick={handleGoogleSignIn}
-                        className="bg-white border-[#E1E3EA] border-2 flex items-center justify-center sm:justify-around gap-5 px-4 py-2 rounded-md min-w-full sm:min-w-[234px]">
-                        <FcGoogle className="size-6" />
-                        <span className="text-[#7E8299] text-sm sm:text-base">Sign in with Google</span>
-                    </button>
-                    <button className="bg-[#F9F9F9] border-[#E1E3EA] border-2 flex items-center justify-center sm:justify-around gap-5 px-4 py-2 rounded-md min-w-full sm:min-w-[234px]">
-                        <SiApple className="size-6" />
-                        <span className="text-[#7E8299] text-sm sm:text-base">Sign in with Apple</span>
-                    </button>
-                </div>
-
-                <p className="flex items-center gap-1 pt-8 sm:pt-10">
-                    <span className="w-[40%] h-[1px] bg-[#EFF2F5]" />
-                    <span className="whitespace-nowrap text-[#A1A5B7]">Or with email</span>
-                    <span className="w-[40%] h-[1px] bg-[#EFF2F5]" />
-                </p>
 
                 <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-3 sm:gap-6 pt-8 sm:pt-10">
                     <div className="flex flex-col">

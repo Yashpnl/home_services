@@ -12,8 +12,9 @@ const ProfileSection = () => {
     const { register, handleSubmit, setValue, formState: { errors }, clearErrors } = useForm();
     const [selectedImage, setSelectedImage] = useState(null);
     const [state, setState] = useState('')  // For (Used PhoneNumber Library)PhoneNumber Input Field 
-    const token = localStorage.getItem("homeservice_token")
-    const userId = localStorage.getItem("userId")
+    const storedData = JSON.parse(localStorage.getItem("homeservice_userData") || '{}');
+    const token = storedData?.token;
+    const userId = storedData?.userId;
 
     const onSubmit = async (data) => {
         try {
@@ -31,7 +32,7 @@ const ProfileSection = () => {
                 'Authorization': `Bearer ${token}`,
             };
 
-            const res = await axios.post(`https://homeservices.bestflutterteam.com/api/users/update_profile`, requestBody, { headers });
+            const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/users/update_profile`, requestBody, { headers });
 
             if (res?.data?.success) {
                 toast.success(res?.data?.message || "Profile updated successfully!");

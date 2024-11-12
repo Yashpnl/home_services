@@ -1,9 +1,9 @@
 "use client"
 import { useEffect, useState } from "react";
 import ProviderCard from "./components/ProviderCard"
-import { apiFetch } from "@/lib/apiFetch";
 import { useGlobalContext } from "@/Context/GlobalContext";
 import { useRouter } from "next/navigation";
+import axios from "axios";
 
 interface Provider {
     id: number;
@@ -11,19 +11,18 @@ interface Provider {
     service_provider_first_name: string;
     category_name: string;
     servicepricings: any;
+    serviceimages: any;
     price: number | { price: number };
     rating: string;
-}
-
-interface ApiResponse {
-    data: Provider[];
 }
 
 const ServiceProviderSection = () => {
 
     const router = useRouter()
     const { results = [] } = useGlobalContext();
-    // const token = localStorage.getItem("homeservice_token") || cookies().get("google_home_services")
+    const storedData = JSON.parse(localStorage.getItem("homeservice_userData") || '{}');
+    const token = storedData?.token;
+
     const [showAll, setShowAll] = useState(false);
     const [allProviders, setAllProviders] = useState<Provider[]>([]);
     const initialServicesToShow = 5;
@@ -34,15 +33,13 @@ const ServiceProviderSection = () => {
 
     const getAllProviders = async () => {
         try {
-            const response = await apiFetch<ApiResponse>('/servicepricing/search_services', {
-                method: 'POST',
+            const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/servicepricing/search_services`, {}, {
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${localStorage.getItem("homeservice_token")}`
+                    'Authorization': `Bearer ${token}`
                 },
             });
-
-            setAllProviders(Array.isArray(response.data) ? response.data : []);
+            setAllProviders(Array.isArray(response?.data?.data) ? response.data?.data : []);
         } catch (error) {
             error instanceof Error ? error.message : 'An unknown error occurred';
         }
@@ -72,7 +69,7 @@ const ServiceProviderSection = () => {
                 {providersToShow?.slice(0, showAll ? providersToShow.length : initialServicesToShow)?.map((services) => (
                     <ProviderCard
                         key={services.id}
-                        providerImage={services?.image_url}
+                        providerImage={services?.serviceimages[0]?.image_url}
                         providerName={services?.service_provider_first_name}
                         providerField={services?.category_name}
                         price={services?.servicepricings[0]?.price}

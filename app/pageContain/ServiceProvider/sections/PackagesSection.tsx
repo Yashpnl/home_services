@@ -58,20 +58,25 @@ const PackagesSection = ({ servicepricings, providerId }: { servicepricings: num
     };
 
     const handleViewCart = () => {
-        // Prepare the cart data to be passed as query parameters
-        const cartData = cart.map(item => ({
-            packageName: item.name,
-            description: item.description,
-            price: item.price,
-            quantity: item.quantity,
-        }));
 
-        // Convert cart data to a JSON string and encode it for the URL
-        const cartString = encodeURIComponent(JSON.stringify(cartData));
+            const cartData = cart.map(item => {
+                const totalPrice = parseFloat(item.price) * item.quantity;
+                return {
+                    packageName: item.name,
+                    description: item.description,
+                    price: item.price,
+                    quantity: item.quantity,
+                    totalPrice: totalPrice.toFixed(2),
+                };
+            });
 
-        // Navigate to the checkout page with the service provider ID and cart data
-        router.push(`/service-provider/${providerId}/checkout?cart=${cartString}`);
+            // Store the cart data in localStorage
+            localStorage.setItem("cartIten", JSON.stringify(cartData));
+
+            router.push(`/service-provider/${providerId}/checkout`);
+        
     };
+
 
     return (
         <div className="rounded-[20px] shadow-[0px_1.23px_4.94px_0px_#D4E0EB] py-5 px-12">
@@ -87,7 +92,7 @@ const PackagesSection = ({ servicepricings, providerId }: { servicepricings: num
                                     <button onClick={() => handleDecrement(index)} className="w-6 h-6 flex items-center justify-center rounded-full text-xl font-semibold">-</button>
                                     <span className="text-lg font-semibold">{quantities[index]}</span>
                                     <button onClick={() => handleIncrement(index)} className="w-6 h-6 flex items-center justify-center rounded-full text-xl font-semibold">+</button>
-                                </div> 
+                                </div>
                             </div>
                             <span className="text-lg font-semibold text-primary">₹ {pkg.price}</span>
                             <Button onClick={() => handleAddToCart(index)} className="mt-2 text-[#0C3469] text-lg font-bold bg-[#F9AA58] rounded-full py-2">
@@ -103,33 +108,26 @@ const PackagesSection = ({ servicepricings, providerId }: { servicepricings: num
                     {cart.length === 0 ? (
                         <span className="text-gray-500">Your cart is empty</span>
                     ) : (
-                        cart.map((item, index) => (
-                            <div key={index} className="flex flex-col gap-3">
-                                <span className="font-medium">{item.name}</span>
-                                <div className="flex items-center justify-between w-full">
-                                    <span className="text-xs w-[70%]">{item.description}</span>
-                                    <div className="flex items-center gap-2 bg-[#D4E0EB] shadow-[0px_1.23px_4.94px_0px_#D4E0EB] rounded-md">
-                                        <button
-                                            onClick={() => handleDecrement(index)}
-                                            className="w-6 h-6 flex items-center justify-center rounded-full text-xl font-semibold"
-                                        >
-                                            -
-                                        </button>
-                                        <span className="text-lg font-semibold">{item.quantity}</span>
-                                        <button
-                                            onClick={() => handleIncrement(index)}
-                                            className="w-6 h-6 flex items-center justify-center rounded-full text-xl font-semibold"
-                                        >
-                                            +
-                                        </button>
+                        cart.map((item, index) => {
+                            // Calculate the total price for the item
+                            const totalPrice = parseFloat(item.price) * item.quantity;
+
+                            return (
+                                <div key={index} className="flex flex-col gap-3">
+                                    <span className="font-medium">{item.name}</span>
+                                    <div className="flex items-center justify-between w-full">
+                                        <span className="text-xs w-[70%]">{item.description}</span>
+                                        <span className="bg-[#D4E0EB] shadow-[0px_1.23px_4.94px_0px_#D4E0EB] rounded-md size-10 flex items-center justify-center text-lg font-semibold">{item.quantity}</span>
                                     </div>
+                                    <span className="text-lg font-semibold text-primary">₹ {totalPrice.toFixed(2)}</span>
                                 </div>
-                                <span className="text-lg font-semibold text-primary">₹ {item.price}</span>
-                            </div>
-                        ))
+                            );
+                        })
                     )}
                     <div className="flex items-center justify-center w-full">
-                        <Button className="text-[#0C3469] text-lg font-bold bg-[#F9AA58] rounded-full py-4 sm:py-7 sm:px-20"
+                        <Button
+                            disabled={cart?.length === 0}
+                            className="text-[#0C3469] text-lg font-bold bg-[#F9AA58] rounded-full py-4 sm:py-7 sm:px-20"
                             onClick={handleViewCart}
                         >
                             View Cart

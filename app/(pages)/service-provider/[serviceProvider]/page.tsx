@@ -19,14 +19,14 @@ interface ApiResponse {
 }
 
 const page = async ({ params }: { params: { serviceProvider: string } }) => {
-
+  
   const token = cookies().get("homeservice_token")?.value;
-
+  
   if (!token) {
     console.error("Token not found");
     return <p>Unauthorized</p>;
   }
-
+  
   const headers = {
     'Content-Type': 'application/json',
     'Accept': 'application/json',
@@ -39,9 +39,10 @@ const page = async ({ params }: { params: { serviceProvider: string } }) => {
       {},
       { headers }
     );
-
+    
     const filteredProvider = response.data.data.find(provider => provider.id === Number(params.serviceProvider));
-
+    
+    console.log(filteredProvider,"paramsparamsparams");
     if (!filteredProvider) {
       console.log("Provider not found for ID:", params.serviceProvider);
       return <p>Provider not found</p>;

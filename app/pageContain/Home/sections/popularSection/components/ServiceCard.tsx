@@ -1,5 +1,4 @@
 import Image from "next/image"
-import { ReactNode } from "react"
 
 const ServiceCard = ({ serviceicon, servicename }: { serviceicon: string, servicename: string }) => {
     return (

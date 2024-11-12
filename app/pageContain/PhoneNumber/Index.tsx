@@ -64,9 +64,14 @@ const PhoneNumber = () => {
             );
 
             if (response.data?.success) {
-                localStorage.setItem("homeservice_token", response?.data?.data?.token);
-                localStorage.setItem("homeservice_username", response?.data?.data?.customer?.first_name);
                 Cookies.set("homeservice_token", response?.data?.data?.token);
+                const userData = {
+                    token: response?.data?.data?.token,
+                    username: response?.data?.data?.customer?.first_name,
+                    userId: response?.data?.data?.customer?.id
+                };
+
+                localStorage.setItem("homeservice_userData", JSON.stringify(userData));
 
                 if (phone_number) {
                     const recaptcha = new RecaptchaVerifier(auth, "recaptcha", { size: "invisible" });

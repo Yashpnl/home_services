@@ -2,11 +2,13 @@ import CheckoutSection from "@/app/pageContain/ServiceProvider/checkoutSection/C
 import Footer from "@/components/footer/Footer"
 import Header from "@/components/header/Header"
 
-const page = () => {
+const page = ({ params }: { params: { serviceProvider: string } }) => {
+    const serviceId = params?.serviceProvider
+
     return (
         <>
             <Header />
-            <CheckoutSection />
+            <CheckoutSection serviceId={serviceId} />
             <Footer />
         </>
     )
