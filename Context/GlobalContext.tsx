@@ -53,16 +53,16 @@ const GlobalProvider = ({ children }: { children: ReactNode }) => {
     const [confirmationResult, setConfirmationResult] = useState<null | ConfirmationResult>(null);
 
     useEffect(() => {
-        const storedGoogleInfo = localStorage.getItem('google_home_services');
+        // const storedGoogleInfo = localStorage.getItem('google_home_services');
         const storedHomeserviceToken = localStorage.getItem('homeservice_token');
 
-        if (storedGoogleInfo) {
-            setUserInfo(JSON.parse(storedGoogleInfo));
-        }
+        // if (storedGoogleInfo) {
+        //     setUserInfo(JSON.parse(storedGoogleInfo));
+        // }
         if (storedHomeserviceToken) {
             setHomeserviceToken(storedHomeserviceToken);
         }
-    }, [homeserviceToken, userInfo]);
+    }, []);
 
     return (
         <GlobalContext.Provider value={{ results, setResults, filters, setFilters, userInfo, homeserviceToken, setHomeserviceToken, confirmationResult, setConfirmationResult }}>

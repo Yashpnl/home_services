@@ -1,5 +1,5 @@
 "use client"
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ServiceProviderImage from "./sections/ServiceProviderImage";
 import ServiceProviderInfo from "./sections/ServiceProviderInfo";
 import ServiceProviderReview from "./sections/ServiceProviderReview";
@@ -29,12 +29,16 @@ interface Provider {
 const ServiceProvider = ({ provider, providerId }: { provider: Provider, providerId: string }) => {
 
   const providerData = {
+    providerId: provider?.id,
+    serviceProviderId: provider?.service_provider_id,
     providerImage: provider?.banner_url,
     providerName: provider?.service_provider_first_name,
     providerCategory: provider?.category_name,
   };
 
-  localStorage.setItem("providerData", JSON.stringify(providerData));
+  useEffect(() => {
+    localStorage.setItem("providerData", JSON.stringify(providerData));
+  }, [])
 
 
   const [packages, setPackges] = useState(false);
@@ -42,19 +46,31 @@ const ServiceProvider = ({ provider, providerId }: { provider: Provider, provide
   const handlePackges = () => {
     setPackges(true);
   };
+  const workingTime = provider.working_time;
+
+  // Transform `working_time` to an object with day-wise schedule
+  const scheduleByDay = workingTime.reduce((acc: any, dayData: any) => {
+    const day = dayData.days;
+    const { start_time, end_time } = dayData.date[0] || {};
+    acc[day] = { startTime: start_time, endTime: end_time };
+    return acc;
+  }, {});
+
 
   return (
     <>
       <div className="width-container">
-        <div className="grid grid-cols-[35rem_1fr] gap-10 grid-rows-2">
+        <div className="grid lg:grid-cols-[35rem_1fr] gap-10 grid-rows-[auto,auto]">
           <ServiceProviderImage serviceimages={provider.serviceimages} />
-          <ServiceProviderInfo handlePackges={handlePackges} provider={{
-            providerName: provider.service_provider_first_name,
-            providerField: provider.category_name,
-            startTime: provider?.working_time[0]?.date?.start_time,
-            endTime: provider?.working_time[0]?.end_time,
-            bio: provider?.description
-          }} />
+          <ServiceProviderInfo
+            handlePackges={handlePackges}
+            provider={{
+              providerName: provider.service_provider_first_name,
+              providerField: provider.category_name,
+              schedule: scheduleByDay,
+              bio: provider.description
+            }}
+          />
           <ServiceProviderReview
             rating={provider.rating}
             orders={provider.total_order}
@@ -66,11 +82,10 @@ const ServiceProvider = ({ provider, providerId }: { provider: Provider, provide
             c_photo={provider.c_photo}
           />
         </div>
-        <div className="grid grid-cols-[35rem_1fr] gap-10 pt-10">
+        <div className="grid lg:grid-cols-[35rem_1fr] gap-10 pt-10">
           <div />
           {packages && <PackagesSection providerId={providerId} servicepricings={provider.servicepricings} />}
         </div>
-        <pre>{JSON.stringify(provider, null, 2)}</pre>
       </div>
     </>
   );

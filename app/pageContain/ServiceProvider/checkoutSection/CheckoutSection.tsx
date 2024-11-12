@@ -24,7 +24,6 @@ const CheckoutSection = ({ serviceId }: { serviceId: number }) => {
     const [totalPrice, setTotalPrice] = useState('');
     const storedData = JSON.parse(localStorage.getItem("homeservice_userData") || '{}');
     const token = storedData?.token;
-    console.log(selectedServiceType, "selectedServiceType");
 
     // const [selectedMethod, setSelectedMethod] = useState<PaymentMethod | null>(null);
     // const handleSelectMethod = (method: PaymentMethod) => {
@@ -32,11 +31,10 @@ const CheckoutSection = ({ serviceId }: { serviceId: number }) => {
     // };
 
     const cartIten = JSON.parse(localStorage.getItem('cartIten') || '[]');
-    // Calculate the total price whenever cartItem changes
 
     useEffect(() => {
         const calculatedTotal = cartIten?.reduce((sum, pkg) => sum + (pkg?.totalPrice || 0), 0);
-        setTotalPrice(calculatedTotal); // Assuming you have a state for totalPrice
+        setTotalPrice(calculatedTotal); 
     }, [cartIten]);
 
     function createDateAsUTC(date: any) {

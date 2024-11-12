@@ -4,6 +4,7 @@ import { useState } from 'react';
 import ratingImage from '@/assets/rating.png';
 import ordersImage from '@/assets/orders.png';
 import experienceImage from '@/assets/experince.png';
+import userprofile from '@/assets/userprofile.png'
 
 const ServiceProviderReview = ({
   rating,
@@ -28,16 +29,15 @@ const ServiceProviderReview = ({
   };
 
   return (
-    <div className="rounded-[20px] shadow-[0px_1.23px_4.94px_0px_#D4E0EB] w-full p-3">
+    <div className="rounded-[20px] shadow-[0px_1.23px_4.94px_0px_#D4E0EB] w-full p-3 h-fit">
       {/* Show toggle for more reviews */}
-      {review?.length > 4 &&
-        <span
-          className="text-[#0054A5] font-medium underline w-full flex items-center justify-end cursor-pointer"
-          onClick={handleToggleViewAll}
-        >
-          {showAll ? 'See less' : 'See more'}
-        </span>
-      }
+      <span
+        className="text-[#0054A5] font-medium underline w-full flex items-center justify-end cursor-pointer"
+        onClick={handleToggleViewAll}
+      >
+        {showAll ? 'See less' : 'See more'}
+      </span>
+
 
       <div className="flex flex-col 2xl:flex-row w-full gap-4 pb-3 px-9">
         <div className="2xl:border-r flex flex-col gap-2 text-[#565656] w-full 2xl:w-[31%]">
@@ -73,11 +73,11 @@ const ServiceProviderReview = ({
               <div className="flex items-center justify-between w-full">
                 <div className="flex items-center gap-2">
                   <Image
-                    src={c_photo}
+                    src={c_photo || userprofile}
                     alt={c_name}
                     width={20}
                     height={20}
-                    className="size-6 rounded-sm"
+                    className="size-8 rounded-full border p-1"
                   />
                   <span className="font-medium text-sm">
                     {c_name}

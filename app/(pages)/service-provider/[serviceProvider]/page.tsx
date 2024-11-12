@@ -40,9 +40,8 @@ const page = async ({ params }: { params: { serviceProvider: string } }) => {
       { headers }
     );
     
-    const filteredProvider = response.data.data.find(provider => provider.id === Number(params.serviceProvider));
+    const filteredProvider = response.data.data.find(provider => provider?.id === Number(params?.serviceProvider));
     
-    console.log(filteredProvider,"paramsparamsparams");
     if (!filteredProvider) {
       console.log("Provider not found for ID:", params.serviceProvider);
       return <p>Provider not found</p>;
