@@ -1,7 +1,9 @@
 import { Raleway } from "next/font/google";
 import "./globals.css";
+import NextTopLoader from "nextjs-toploader";
+import { Toaster } from "react-hot-toast";
+import GlobalProvider from "@/Context/GlobalContext";
 
-// Import Raleway font from Google
 const raleway = Raleway({
   subsets: ["latin"],
   weight: ["100", "400", "700", "900"],
@@ -21,7 +23,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${raleway.variable} antialiased`}>
-        {children}
+        <NextTopLoader color="#F9AA58" />
+        <Toaster />
+        <GlobalProvider>
+          {children}
+        </GlobalProvider>
       </body>
     </html>
   );

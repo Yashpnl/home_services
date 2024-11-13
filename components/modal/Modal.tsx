@@ -3,16 +3,24 @@ import React, { ReactNode, useRef, useEffect } from 'react';
 interface ModalProps {
     children: ReactNode;
     onClose: () => void;
+    showModal: boolean
 }
 
-const Modal = ({ children, onClose }: ModalProps) => {
+const Modal = ({ children, onClose, showModal }: ModalProps) => {
 
     const modalRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
+        showModal ? (document.body.style.overflow = 'hidden') : null
+        return () => {
+            document.body.style.overflow = 'unset'
+        }
+    }, [showModal])
+
+    useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
             if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
-                onClose(); // Close the modal when clicking outside
+                onClose();
             }
         };
 
