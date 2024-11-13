@@ -13,9 +13,8 @@ const ServiceProviderReview = ({
   c_name,
   review,
   date,
-  star,
   c_photo,
-}) => {
+}: any) => {
 
   const [showAll, setShowAll] = useState(false);
   const initialServicesToShow = 4;

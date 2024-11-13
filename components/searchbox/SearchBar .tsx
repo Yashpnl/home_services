@@ -1,20 +1,18 @@
 "use client";
 import { useState } from 'react';
 import { FaSearch, FaSlidersH } from 'react-icons/fa';
-import Modal from '../modal/Modal';
-import FilterBox from './FilterBox ';
 import { useGlobalContext } from '@/Context/GlobalContext';
 
 const SearchBar = () => {
 
     const { setResults } = useGlobalContext();
 
-    const [filter, setFilter] = useState(false);
+    // const [filter, setFilter] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
 
-    const toggleFilter = () => {
-        setFilter(!filter);
-    };
+    // const toggleFilter = () => {
+    //     setFilter(!filter);
+    // };
 
     const handleSearch = async () => {
         const response = await fetch('https://homeservices.bestflutterteam.com/api/servicepricing/search_services', {
@@ -51,11 +49,11 @@ const SearchBar = () => {
                     /> */}
                     <button onClick={handleSearch} className="ml-2 bg-blue-500 text-white rounded px-3 py-1">Search</button>
                 </div>
-                {filter && (
+                {/* {filter && (
                     <Modal onClose={toggleFilter} showModal={filter}>
                         <FilterBox onApplyFilter={setResults} />
                     </Modal>
-                )}
+                )} */}
             </div>
         </>
     );

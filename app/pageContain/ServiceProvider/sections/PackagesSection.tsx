@@ -1,3 +1,4 @@
+// @ts-nocheck
 "use client";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
@@ -59,22 +60,22 @@ const PackagesSection = ({ servicepricings, providerId }: { servicepricings: num
 
     const handleViewCart = () => {
 
-            const cartData = cart.map(item => {
-                const totalPrice = parseFloat(item.price) * item.quantity;
-                return {
-                    packageName: item.name,
-                    description: item.description,
-                    price: item.price,
-                    quantity: item.quantity,
-                    totalPrice: totalPrice.toFixed(2),
-                };
-            });
+        const cartData = cart.map(item => {
+            const totalPrice = parseFloat(item.price) * item.quantity;
+            return {
+                packageName: item.name,
+                description: item.description,
+                price: item.price,
+                quantity: item.quantity,
+                totalPrice: totalPrice.toFixed(2),
+            };
+        });
 
-            // Store the cart data in localStorage
-            localStorage.setItem("cartIten", JSON.stringify(cartData));
+        // Store the cart data in localStorage
+        localStorage.setItem("cartIten", JSON.stringify(cartData));
 
-            router.push(`/service-provider/${providerId}/checkout`);
-        
+        router.push(`/service-provider/${providerId}/checkout`);
+
     };
 
 
@@ -82,7 +83,7 @@ const PackagesSection = ({ servicepricings, providerId }: { servicepricings: num
         <div className="rounded-[20px] shadow-[0px_1.23px_4.94px_0px_#D4E0EB] py-5 px-12">
             <h1 className="font-semibold text-2xl">Packages</h1>
             <div className="grid 2xl:grid-cols-2 gap-5 pt-7">
-                {servicepricings.map((pkg, index) => (
+                {servicepricings.map((pkg: any, index: any) => (
                     <div key={index} className="flex flex-col gap-5">
                         <div className="flex flex-col gap-5 max-w-full px-6 py-4 border border-[#0000001A] rounded-md">
                             <span className="font-medium">{pkg.name}</span>

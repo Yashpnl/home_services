@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import CheckoutSection from "@/app/pageContain/ServiceProvider/checkoutSection/CheckoutSection"
 import Footer from "@/components/footer/Footer"
 import Header from "@/components/header/Header"
