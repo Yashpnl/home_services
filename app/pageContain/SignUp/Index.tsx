@@ -9,11 +9,6 @@ import { useForm } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { FiLoader } from 'react-icons/fi';
-import { FcGoogle } from 'react-icons/fc';
-import { SiApple } from 'react-icons/si';
-import { User } from 'firebase/auth';
-import { signInWithGoogle } from '@/lib/firebase';
-import Cookies from "js-cookie";
 
 interface SignUpFormData {
     first_name: string;
