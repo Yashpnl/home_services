@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { useRouter } from 'next/navigation';
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import axios from 'axios';
 import { auth } from '@/lib/firebase';
@@ -34,9 +34,19 @@ const PhoneNumber = () => {
     const { setConfirmationResult } = useGlobalContext();
 
     // Extract form data from session storage
-    const first_name = sessionStorage.getItem('first_name')
-    const email = sessionStorage.getItem('email')
-    const password = sessionStorage.getItem('password')
+    const [firstName, setFirstName] = useState<string | null>(null);
+    const [email, setEmail] = useState<string | null>(null);
+    const [password, setPassword] = useState<string | null>(null);
+
+    useEffect(() => {
+        // Check if running in the client
+        if (typeof window !== 'undefined') {
+            setFirstName(sessionStorage.getItem('first_name'));
+            setEmail(sessionStorage.getItem('email'));
+            setPassword(sessionStorage.getItem('password'));
+        }
+    }, []);
+
 
     const extractPhoneDetails = (fullPhoneNumber: string) => {
         const countryCode = fullPhoneNumber.substring(0, fullPhoneNumber.length - 10);
@@ -53,7 +63,7 @@ const PhoneNumber = () => {
 
         setError(null);
         const { country_code, phone_number } = extractPhoneDetails(phone);
-        const formData = { first_name, email, password, phone_number, country_code };
+        const formData = { firstName, email, password, phone_number, country_code };
 
         try {
             setLoading(true)
@@ -67,7 +77,7 @@ const PhoneNumber = () => {
                 Cookies.set("homeservice_token", response?.data?.data?.token);
                 const userData = {
                     token: response?.data?.data?.token,
-                    username: response?.data?.data?.customer?.first_name,
+                    username: response?.data?.data?.customer?.firstName,
                     userId: response?.data?.data?.customer?.id
                 };
 
