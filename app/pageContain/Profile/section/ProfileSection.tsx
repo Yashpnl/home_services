@@ -14,9 +14,17 @@ const ProfileSection = () => {
     const [selectedImage, setSelectedImage] = useState(null);
     const [selectedFile, setSelectedFile] = useState(null);
     const [state, setState] = useState('')  // For (Used PhoneNumber Library)PhoneNumber Input Field 
-    const storedData = JSON.parse(localStorage.getItem("homeservice_userData") || '{}');
-    const token = storedData?.token;
-    const userId = storedData?.userId;
+    const [token, setToken] = useState<string | null>(null);
+    const [userId, setUserId] = useState<string | null>(null);
+
+    useEffect(() => {
+        if (typeof window !== 'undefined') {  // Ensure code runs only on client
+            const storedData = JSON.parse(localStorage.getItem("homeservice_userData") || '{}');
+            setToken(storedData?.token || null);
+            setUserId(storedData?.userId || null);
+        }
+    }, []);
+
 
     // Fetch user data and set form values
     useEffect(() => {
@@ -82,8 +90,8 @@ const ProfileSection = () => {
     // Handle image change
     const handleImageChange = (event) => {
         const file = event.target.files[0];
-        console.log(file,"filefile");
-        
+        console.log(file, "filefile");
+
         if (file) {
             const imageURL = URL.createObjectURL(file);
             setSelectedImage(imageURL);
