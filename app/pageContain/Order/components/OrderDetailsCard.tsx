@@ -1,5 +1,5 @@
 
-const OrderDetailsCard = ({ serviceField, paymentmethod, b_time, b_date, providername, totalamount, serviceprice }: { serviceField: string, paymentmethod: string, b_time: string, b_date: string, providername: string, totalamount: string, serviceprice?: string }) => {
+const OrderDetailsCard = ({ serviceField, paymentmethod, b_time, b_date, providername, totalamount, serviceprice }: { serviceField: string, paymentmethod: string, b_time: string, b_date: string, providername: string, totalamount: number, serviceprice?: number }) => {
     return (
         <>
             <div className="p-7 bg-white max-w-2xl rounded-lg shadow-[0px_3.84px_15.35px_0px_#D4E0EB] flex flex-col gap-5">

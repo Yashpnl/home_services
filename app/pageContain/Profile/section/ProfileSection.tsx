@@ -1,7 +1,6 @@
 "use client"
-import { Button } from '@/components/ui/button';
 import axios from 'axios';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import PhoneInput from 'react-phone-input-2';
@@ -11,12 +10,44 @@ const ProfileSection = () => {
 
     const { register, handleSubmit, setValue, formState: { errors }, clearErrors } = useForm();
     const [selectedImage, setSelectedImage] = useState(null);
+    const [selectedFile, setSelectedFile] = useState(null);
     const [state, setState] = useState('')  // For (Used PhoneNumber Library)PhoneNumber Input Field 
     const storedData = JSON.parse(localStorage.getItem("homeservice_userData") || '{}');
     const token = storedData?.token;
     const userId = storedData?.userId;
 
-    const onSubmit = async (data) => {
+    // Fetch user data and set form values
+    useEffect(() => {
+        const storedData = JSON.parse(localStorage.getItem("homeservice_userData") || '{}');
+        const token = storedData?.token;
+
+        const headers = {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization': `Bearer ${token}`,
+        };
+
+        const fetchUserData = async () => {
+            try {
+                const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/users/user_details`, { headers });
+                const userData = res?.data?.data
+
+                // Set form values using `setValue`
+                setValue('first_name', userData.first_name || '');
+                setValue('date_of_birth', userData.date_of_birth || '');
+                setValue('email', userData.email || '');
+                setValue('phone_number', userData.phone_number || '');
+                setState(userData.phone_number || '');
+                setSelectedImage(userData.profile_image_url || null);
+            } catch (error) {
+                console.error('Failed to fetch user data:', error);
+            }
+        };
+
+        fetchUserData();
+    }, [setValue]);
+
+    const onSubmit = async (data: any) => {
         try {
             const requestBody = {
                 id: userId,
@@ -25,6 +56,7 @@ const ProfileSection = () => {
                 email: data.email,
                 phone_number: data.phone_number,
                 date_of_birth: data.date_of_birth,
+                profile_image_url: selectedFile
             };
             const headers = {
                 'Content-Type': 'application/json',
@@ -45,12 +77,15 @@ const ProfileSection = () => {
         }
     };
 
-
-    const handleImageChange = (e) => {
-        const file = e.target.files[0];
+    // Handle image change
+    const handleImageChange = (event) => {
+        const file = event.target.files[0];
+        console.log(file,"filefile");
+        
         if (file) {
-            const imageUrl = URL.createObjectURL(file);
-            setSelectedImage(imageUrl);
+            const imageURL = URL.createObjectURL(file);
+            setSelectedImage(imageURL);
+            setSelectedFile(file?.name);
         }
     };
 
@@ -59,12 +94,12 @@ const ProfileSection = () => {
     };
 
     return (
-        <div className='md:py-20 w-[90%] mx-auto'>
-            <div className=" bg-white rounded-lg shadow-[0px_3.84px_15.35px_0px_#D4E0EB] flex flex-col gap-5 w-full">
+        <div className='lg:py-20 w-[90%] mx-auto'>
+            <div className="bg-white rounded-lg shadow-[0px_3.84px_15.35px_0px_#D4E0EB] flex flex-col gap-5 w-full">
                 <form onSubmit={handleSubmit(onSubmit)}>
-                    <div className='p-5 flex flex-col md:flex-row items-center justify-between gap-4'>
-                        {/* profile photo */}
-                        <div className='flex flex-col items-center justify-center sm:items-start w-full md:w-[10%]'>
+                    <div className='p-5 flex flex-col lg:flex-row items-center justify-between gap-4'>
+                        {/* Profile photo */}
+                        <div className='flex flex-col items-center justify-center lg:items-start w-full lg:w-[10%]'>
                             <div className='relative w-32 h-32'>
                                 <img
                                     src={selectedImage || '/fallback.jpg'}
@@ -81,7 +116,6 @@ const ProfileSection = () => {
                                     </svg>
                                 </button>
                             </div>
-
                             <input
                                 type='file'
                                 id='fileInput'
@@ -91,10 +125,11 @@ const ProfileSection = () => {
                             />
                         </div>
 
-                        <div className="flex flex-col justify-center gap-3 w-full md:w-[60%]">
-                            <div className='flex flex-col md:flex-row gap-3 sm:gap-5 xl:gap-20'>
-                                <div className="w-full md:w-1/2 flex flex-col gap-2">
-                                    <label htmlFor="name">Name</label>
+                        {/* Form Fields */}
+                        <div className="flex flex-col justify-center gap-3 w-full lg:w-[60%]">
+                            <div className='flex flex-col lg:flex-row gap-3 sm:gap-5 xl:gap-20'>
+                                <div className="w-full lg:w-1/2 flex flex-col gap-2">
+                                    <label htmlFor="first_name">Name</label>
                                     <input
                                         type="text"
                                         {...register("first_name", {
@@ -105,40 +140,25 @@ const ProfileSection = () => {
                                             }
                                         })}
                                         className="w-full rounded-2xl px-4 py-3 border border-opacity-5 outline-none"
-                                        style={{
-                                            backgroundColor: 'rgba(249, 247, 249, 1)',
-                                            borderColor: 'rgba(223, 223, 223, 1)',
-                                        }}
                                         placeholder="Enter your name"
                                     />
                                     {errors.first_name && <p className="text-red-600">{errors.first_name.message}</p>}
                                 </div>
 
-                                <div className="w-full md:w-1/2 flex flex-col gap-2">
+                                <div className="w-full lg:w-1/2 flex flex-col gap-2">
                                     <label htmlFor="date_of_birth">Date of Birth</label>
                                     <input
                                         type="date"
-                                        {...register("date_of_birth", {
-                                            required: "dob is required",
-                                            minLength: {
-                                                value: 2,
-                                                message: "dob must be at least 2 characters long"
-                                            }
-                                        })}
+                                        {...register("date_of_birth")}
                                         className="w-full rounded-2xl px-4 py-3 border border-opacity-5 outline-none"
-                                        style={{
-                                            backgroundColor: 'rgba(249, 247, 249, 1)',
-                                            borderColor: 'rgba(223, 223, 223, 1)',
-                                        }}
-                                        placeholder="Enter your city"
+                                        placeholder="Enter your date of birth"
                                     />
                                     {errors.date_of_birth && <p className="text-red-600">{errors.date_of_birth.message}</p>}
                                 </div>
                             </div>
 
-                            <div className='flex flex-col md:flex-row gap-3 sm:gap-5 xl:gap-20'>
-
-                                <div className="w-full md:w-1/2 flex flex-col gap-2">
+                            <div className='flex flex-col lg:flex-row gap-3 sm:gap-5 xl:gap-20'>
+                                <div className="w-full lg:w-1/2 flex flex-col gap-2">
                                     <label htmlFor="email">Email</label>
                                     <input
                                         type="email"
@@ -150,16 +170,12 @@ const ProfileSection = () => {
                                             }
                                         })}
                                         className="w-full rounded-2xl px-4 py-3 border border-opacity-5 outline-none"
-                                        style={{
-                                            backgroundColor: 'rgba(249, 247, 249, 1)',
-                                            borderColor: 'rgba(223, 223, 223, 1)',
-                                        }}
                                         placeholder="Enter your email"
                                     />
                                     {errors.email && <p className="text-red-600">{errors.email.message}</p>}
                                 </div>
-                                {/* Phone Number Input with Country Code */}
-                                <div className="w-full md:w-1/2 flex flex-col gap-2">
+
+                                <div className="w-full lg:w-1/2 flex flex-col gap-2">
                                     <label htmlFor="phone_number">Phone Number</label>
                                     <PhoneInput
                                         inputStyle={{
@@ -180,25 +196,21 @@ const ProfileSection = () => {
                                         onChange={(e) => {
                                             setState(e);
                                             setValue('phone_number', e);
-                                            clearErrors('phone_number');
                                         }}
                                     />
                                     <input
                                         type="hidden"
                                         {...register('phone_number')}
                                     />
-
-                                    {errors.phone_number && (
-                                        <p className="text-red-500 text-left px-1">{errors.phone_number.message}</p>
-                                    )}
+                                    {errors.phone_number && <p className="text-red-500">{errors.phone_number.message}</p>}
                                 </div>
                             </div>
                         </div>
 
-                        <span className='flex items-center justify-center w-full md:w-[20%]'>
-                            <Button className="text-[#0C3469] text-base font-bold bg-[#F9AA58] rounded-full py-4 sm:py-6 w-full">
+                        <span className='flex items-center justify-center w-full lg:w-[20%]'>
+                            <button className="text-[#0C3469] text-base font-bold bg-[#F9AA58] rounded-full py-4 sm:py-6 w-full">
                                 Save
-                            </Button>
+                            </button>
                         </span>
                     </div>
                 </form>
@@ -208,3 +220,5 @@ const ProfileSection = () => {
 }
 
 export default ProfileSection
+
+

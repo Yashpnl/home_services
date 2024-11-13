@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { FaSearch, FaSlidersH } from 'react-icons/fa';
 import Modal from '../modal/Modal';
 import FilterBox from './FilterBox ';
@@ -45,10 +45,10 @@ const SearchBar = () => {
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                     />
-                    <FaSlidersH
+                    {/* <FaSlidersH
                         className="text-gray-400 ml-2 cursor-pointer"
                         onClick={toggleFilter}
-                    />
+                    /> */}
                     <button onClick={handleSearch} className="ml-2 bg-blue-500 text-white rounded px-3 py-1">Search</button>
                 </div>
                 {filter && (
