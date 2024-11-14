@@ -18,6 +18,7 @@ const PopularSection = () => {
     const initialServicesToShow = 8;
     const { results } = useGlobalContext();
     const [token, setToken] = useState(null);
+    console.log(token, "tokentokentoken");
 
     useEffect(() => {
         const storedData = JSON.parse(localStorage.getItem("homeservice_userData") || '{}');
@@ -44,7 +45,7 @@ const PopularSection = () => {
 
     useEffect(() => {
         getAllServices();
-    }, [results]);
+    }, [results, token]);
 
     return (
         <>

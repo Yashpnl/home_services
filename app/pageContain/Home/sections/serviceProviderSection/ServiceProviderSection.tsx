@@ -53,7 +53,7 @@ const ServiceProviderSection = () => {
 
     useEffect(() => {
         getAllProviders();
-    }, []);
+    }, [token]);
 
     const providersToShow = results.length > 0 ? results : allProviders;
 
