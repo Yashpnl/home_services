@@ -21,7 +21,6 @@ const Header = () => {
   const [showModal, setShowModal] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { userInfo, homeserviceToken } = useGlobalContext();
-  const googleToken = userInfo?.stsTokenManager?.accessToken
 
   const handleModal = () => {
     setShowModal(!showModal);
@@ -32,14 +31,14 @@ const Header = () => {
   };
 
   useEffect(() => {
-    if (googleToken || homeserviceToken) {
+    if (homeserviceToken) {
       setIsLoggedIn(true);
       const storedData = JSON.parse(localStorage.getItem("homeservice_userData") || '{}');
       setUserName(storedData?.username)
     } else {
       setIsLoggedIn(false);
     }
-  }, [googleToken, homeserviceToken]);
+  }, [homeserviceToken]);
 
   return (
     <>

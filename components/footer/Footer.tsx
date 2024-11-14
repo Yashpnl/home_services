@@ -12,7 +12,6 @@ const Footer = () => {
           height={100}
           quality={100}
           alt="homeservices"
-          // className="w-[70px] sm:w-[100px] h-[70px] sm:h-[100px]"
           className="w-full h-full"
         />
       </div>

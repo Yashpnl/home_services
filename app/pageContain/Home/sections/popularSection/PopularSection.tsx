@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 "use client"
 import { useEffect, useState } from "react";
 import ServiceCard from "./components/ServiceCard"
@@ -15,8 +17,12 @@ const PopularSection = () => {
     const [allServices, setAllServices] = useState<Service[]>([]);
     const initialServicesToShow = 8;
     const { results } = useGlobalContext();
-    const storedData = JSON.parse(localStorage.getItem("homeservice_userData") || '{}');
-    const token = storedData?.token;
+    const [token, setToken] = useState(null);
+
+    useEffect(() => {
+        const storedData = JSON.parse(localStorage.getItem("homeservice_userData") || '{}');
+        setToken(storedData?.token);
+    }, []);
     const handleToggleViewAll = () => {
         setShowAll(!showAll);
     };

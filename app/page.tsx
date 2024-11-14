@@ -1,4 +1,4 @@
-import Main from './(pages)/(home)/page'
+import Main from './(pages)/home/Main'
 
 const page = () => {
   return (

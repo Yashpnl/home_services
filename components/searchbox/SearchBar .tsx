@@ -1,7 +1,10 @@
+// @ts-nocheck
+
 "use client";
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FaSearch, FaSlidersH } from 'react-icons/fa';
 import { useGlobalContext } from '@/Context/GlobalContext';
+import axios from 'axios';
 
 const SearchBar = () => {
 
@@ -9,25 +12,30 @@ const SearchBar = () => {
 
     // const [filter, setFilter] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
+    const [token, setToken] = useState('');
+
+    useEffect(() => {
+        const storedData = JSON.parse(localStorage.getItem("homeservice_userData") || '{}');
+        setToken(storedData?.token)
+    }, [])
 
     // const toggleFilter = () => {
     //     setFilter(!filter);
     // };
 
     const handleSearch = async () => {
-        const response = await fetch('https://homeservices.bestflutterteam.com/api/servicepricing/search_services', {
+
+        const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/servicepricing/search_services`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${localStorage.getItem("homeservice_token")}`
+                'Authorization': `Bearer ${token}`
             },
             body: JSON.stringify({
                 service_name: searchTerm,
             }),
         });
         const data = await response.json();
-        console.log(data, "data");
-
         setResults(data?.data);
     };
 

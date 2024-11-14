@@ -22,8 +22,12 @@ const ServiceProviderSection = () => {
 
     const router = useRouter()
     const { results = [] } = useGlobalContext();
-    const storedData = JSON.parse(localStorage.getItem("homeservice_userData") || '{}');
-    const token = storedData?.token;
+    const [token, setToken] = useState(null);
+
+    useEffect(() => {
+        const storedData = JSON.parse(localStorage.getItem("homeservice_userData") || '{}');
+        setToken(storedData?.token);
+    }, []);
 
     const [showAll, setShowAll] = useState(false);
     const [allProviders, setAllProviders] = useState<Provider[]>([]);
