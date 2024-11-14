@@ -34,7 +34,7 @@ const PhoneNumber = () => {
     const { setConfirmationResult } = useGlobalContext();
 
     // Extract form data from session storage
-    const [firstName, setFirstName] = useState<string | null>(null);
+    const [first_name, setFirstName] = useState<string | null>(null);
     const [email, setEmail] = useState<string | null>(null);
     const [password, setPassword] = useState<string | null>(null);
 
@@ -63,7 +63,7 @@ const PhoneNumber = () => {
 
         setError(null);
         const { country_code, phone_number } = extractPhoneDetails(phone);
-        const formData = { firstName, email, password, phone_number, country_code };
+        const formData = { first_name, email, password, phone_number, country_code };
 
         try {
             setLoading(true)
