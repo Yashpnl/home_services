@@ -19,10 +19,12 @@ const ReviewSummarySection = () => {
         const cartItems = JSON.parse(localStorage.getItem('cartIten') || '[]');
 
         // Prepare the `product` array based on `cartItems`
+        console.log(cartItems, "cartItems");
         const formattedProduct = cartItems.map((item: any) => ({
-            service_pricing_id: item.service_pricing_id,
-            quantity: item.quantity,
-            service_package: item.packageName
+
+            service_pricing_id: item?.service_pricing_id,
+            quantity: item?.quantity,
+            service_package: item?.packageName
         }));
 
         // Set `product` array in state

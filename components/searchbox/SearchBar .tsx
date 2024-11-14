@@ -25,18 +25,19 @@ const SearchBar = () => {
 
     const handleSearch = async () => {
 
-        const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/servicepricing/search_services`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
+        const response = await axios.post(
+            `${process.env.NEXT_PUBLIC_API_URL}/servicepricing/search_services`,
+            {
+                service_name: searchTerm, // Only pass searchTerm as required
             },
-            body: JSON.stringify({
-                service_name: searchTerm,
-            }),
-        });
-        const data = await response.json();
-        setResults(data?.data);
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
+                },
+            }
+        );
+        setResults(response.data?.data); // Access data directly from response
     };
 
     return (

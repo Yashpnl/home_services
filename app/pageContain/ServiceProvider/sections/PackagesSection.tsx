@@ -15,6 +15,7 @@ const PackagesSection = ({ servicepricings, providerId }: { servicepricings: num
     const router = useRouter()
     const [quantities, setQuantities] = useState<number[]>(servicepricings.map(() => 1));
     const [cart, setCart] = useState<{ name: string; description: string; price: string; quantity: number }[]>([]);
+    console.log(cart, "cartcart");
 
     const handleIncrement = (index: number) => {
         setQuantities(prevQuantities => {
@@ -46,7 +47,7 @@ const PackagesSection = ({ servicepricings, providerId }: { servicepricings: num
             // If the item does not exist, add it to the cart
             setCart(prevCart => [
                 ...prevCart,
-                { name: pkg.name, description: pkg.description, price: pkg.price, quantity }
+                { service_pricing_id: pkg?.id, name: pkg.name, description: pkg.description, price: pkg.price, quantity }
             ]);
         }
 
@@ -68,6 +69,7 @@ const PackagesSection = ({ servicepricings, providerId }: { servicepricings: num
                 price: item.price,
                 quantity: item.quantity,
                 totalPrice: totalPrice.toFixed(2),
+                service_pricing_id:item?.service_pricing_id
             };
         });
 
