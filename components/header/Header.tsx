@@ -10,11 +10,12 @@ import { useEffect, useState } from "react";
 import Modal from "../modal/Modal";
 import DropDownMenu from "../modal/DropDownMenu";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useGlobalContext } from "@/Context/GlobalContext";
 
 const Header = () => {
 
+  const router = useRouter()
   const pathname = usePathname();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userName, setUserName] = useState<string | null>('');
@@ -107,14 +108,16 @@ const Header = () => {
       {isMobileMenuOpen && (
         <div className="md:hidden bg-white p-5 absolute top-28 right-2 rounded-2xl w-fit h-fit z-50 shadow-[0px_1.23px_4.95px_0px_#04040440]">
           <div className="flex flex-col items-start gap-4">
-            <div className="flex items-center gap-4 cursor-pointer">
+            <div className="flex items-center gap-4 cursor-pointer"
+              onClick={() => router.push('/order')}
+            >
               <RiShoppingBag4Line className="text-secondary size-6" />
               <p className="sm:text-xl">Order</p>
             </div>
 
             {isLoggedIn ? (
               <div className="flex items-center gap-1 cursor-pointer" onClick={handleModal}>
-                <p className="sm:text-xl">Eva John</p>
+                <p className="sm:text-xl">{userName || userInfo?.displayName}</p>
                 <IoMdArrowDropdown className="text-secondary size-10" />
               </div>
             ) : (

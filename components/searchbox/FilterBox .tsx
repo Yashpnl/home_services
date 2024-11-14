@@ -1,5 +1,5 @@
 "use client";
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button } from '../ui/button';
 import { useGlobalContext } from '@/Context/GlobalContext';
 
@@ -11,10 +11,14 @@ const FilterBox = () => {
     const [selectedExperience, setSelectedExperience] = useState<string>('ALL');
     const [rating, setRating] = useState<[number, number]>([0, 5]);
     const [pricing, setPricing] = useState<[number, number]>([250, 5000]);
-    const token = localStorage.getItem("homeservice_token");
+    const [token, setToken] = useState('');
 
-    const serviceTypes = ['ALL', 'wiring', 'repairs', 'emergency', 'installations'];
+    const serviceTypes = ['ALL', 'plumbing', 'repairs', 'emergency', 'installations'];
     const experienceLevels = ['ALL', 'A year', '2 year', '3 year', '4 year', '5+ year', '10+ year'];
+    useEffect(() => {
+        const storedData = JSON.parse(localStorage.getItem("homeservice_userData") || '{}');
+        setToken(storedData?.token);
+    }, []);
 
     const handleApplyFilter = async () => {
         // Update global filter state

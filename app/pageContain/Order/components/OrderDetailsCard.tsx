@@ -10,18 +10,18 @@ const OrderDetailsCard = ({ serviceField, paymentmethod, b_time, b_date, provide
                     }
                 </div>
 
-                <div className="flex items-center justify-between gap-5">
-                    <div className="w-1/2 flex flex-col items-start border-r pr-5 gap-5">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5">
+                    <div className="w-full sm:w-1/2 flex flex-col items-start sm:border-r sm:pr-5 gap-5">
                         <p className="w-full flex items-center justify-between">
                             Payment Method
                             <span className="text-[#0054A5] font-semibold">{paymentmethod}</span>
                         </p>
-                        <p className="w-full flex items-center justify-between">
+                        <p className="w-full flex items-end sm:items-center justify-between">
                             Booking time
                             <span className="font-semibold">{b_time}</span>
                         </p>
                     </div>
-                    <div className="w-1/2 flex flex-col items-start gap-5">
+                    <div className="w-full sm:w-1/2 flex flex-col items-start gap-5">
                         <p className="w-full flex items-center justify-between">
                             Booking date
                             <span className="font-semibold">{b_date}</span>
