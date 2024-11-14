@@ -22,7 +22,7 @@ const PopularSection = () => {
     useEffect(() => {
         const storedData = JSON.parse(localStorage.getItem("homeservice_userData") || '{}');
         setToken(storedData?.token);
-    }, []);
+    }, [token]);
     const handleToggleViewAll = () => {
         setShowAll(!showAll);
     };

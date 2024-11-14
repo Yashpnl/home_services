@@ -27,7 +27,7 @@ const ServiceProviderSection = () => {
     useEffect(() => {
         const storedData = JSON.parse(localStorage.getItem("homeservice_userData") || '{}');
         setToken(storedData?.token);
-    }, []);
+    }, [token]);
 
     const [showAll, setShowAll] = useState(false);
     const [allProviders, setAllProviders] = useState<Provider[]>([]);

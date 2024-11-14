@@ -54,13 +54,12 @@ const GlobalProvider = ({ children }: { children: ReactNode }) => {
 
     useEffect(() => {
         // const storedGoogleInfo = localStorage.getItem('google_home_services');
-        const storedHomeserviceToken = localStorage.getItem('homeservice_token');
-
+        const storedHomeserviceToken = JSON.parse(localStorage.getItem("homeservice_userData") || '{}');
         // if (storedGoogleInfo) {
         //     setUserInfo(JSON.parse(storedGoogleInfo));
         // }
         if (storedHomeserviceToken) {
-            setHomeserviceToken(storedHomeserviceToken);
+            setHomeserviceToken(storedHomeserviceToken?.token);
         }
     }, []);
 
