@@ -3,6 +3,8 @@
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { IoMdClose } from "react-icons/io";
+import { RiDeleteBin5Line } from "react-icons/ri";
 
 interface ServicePricing {
     name: string;
@@ -12,10 +14,9 @@ interface ServicePricing {
 
 const PackagesSection = ({ servicepricings, providerId }: { servicepricings: number, providerId: string }) => {
 
-    const router = useRouter()
+    const router = useRouter();
     const [quantities, setQuantities] = useState<number[]>(servicepricings.map(() => 1));
     const [cart, setCart] = useState<{ name: string; description: string; price: string; quantity: number }[]>([]);
-    console.log(cart, "cartcart");
 
     const handleIncrement = (index: number) => {
         setQuantities(prevQuantities => {
@@ -39,28 +40,28 @@ const PackagesSection = ({ servicepricings, providerId }: { servicepricings: num
         const existingItemIndex = cart.findIndex(item => item.name === pkg.name);
 
         if (existingItemIndex > -1) {
-            // If the item already exists in the cart, update the quantity
             const updatedCart = [...cart];
             updatedCart[existingItemIndex].quantity += quantity;
             setCart(updatedCart);
         } else {
-            // If the item does not exist, add it to the cart
             setCart(prevCart => [
                 ...prevCart,
                 { service_pricing_id: pkg?.id, name: pkg.name, description: pkg.description, price: pkg.price, quantity }
             ]);
         }
 
-        // Reset quantity after adding to cart
         setQuantities(prevQuantities => {
             const newQuantities = [...prevQuantities];
-            newQuantities[index] = 1; // Reset the quantity for that package
+            newQuantities[index] = 1;
             return newQuantities;
         });
     };
 
-    const handleViewCart = () => {
+    const handleRemoveFromCart = (index: number) => {
+        setCart(prevCart => prevCart.filter((_, cartIndex) => cartIndex !== index));
+    };
 
+    const handleViewCart = () => {
         const cartData = cart.map(item => {
             const totalPrice = parseFloat(item.price) * item.quantity;
             return {
@@ -69,17 +70,13 @@ const PackagesSection = ({ servicepricings, providerId }: { servicepricings: num
                 price: item.price,
                 quantity: item.quantity,
                 totalPrice: totalPrice.toFixed(2),
-                service_pricing_id:item?.service_pricing_id
+                service_pricing_id: item?.service_pricing_id
             };
         });
 
-        // Store the cart data in localStorage
-        localStorage.setItem("cartIten", JSON.stringify(cartData));
-
+        localStorage.setItem("cartItems", JSON.stringify(cartData));
         router.push(`/service-provider/${providerId}/checkout`);
-
     };
-
 
     return (
         <div className="rounded-[20px] shadow-[0px_1.23px_4.94px_0px_#D4E0EB] py-5 px-12">
@@ -112,11 +109,15 @@ const PackagesSection = ({ servicepricings, providerId }: { servicepricings: num
                         <span className="text-gray-500">Your cart is empty</span>
                     ) : (
                         cart.map((item, index) => {
-                            // Calculate the total price for the item
                             const totalPrice = parseFloat(item.price) * item.quantity;
 
                             return (
-                                <div key={index} className="flex flex-col gap-3">
+                                <div key={index} className="flex flex-col gap-3 px-6 py-4 border border-[#0000001A] rounded-md">
+                                    <div className="flex items-center justify-end">
+                                        <button onClick={() => handleRemoveFromCart(index)} className="border border-[#00000049] rounded-md text-lg p-1">
+                                            <RiDeleteBin5Line />
+                                        </button>
+                                    </div>
                                     <span className="font-medium">{item.name}</span>
                                     <div className="flex items-center justify-between w-full">
                                         <span className="text-xs w-[70%]">{item.description}</span>

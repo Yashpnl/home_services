@@ -90,7 +90,6 @@ const ProfileSection = () => {
     // Handle image change
     const handleImageChange = (event) => {
         const file = event.target.files[0];
-        console.log(file, "filefile");
 
         if (file) {
             const imageURL = URL.createObjectURL(file);

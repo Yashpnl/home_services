@@ -19,7 +19,6 @@ interface ProviderInfoProps {
 const ServiceProviderInfo = ({ handlePackges, provider }: ProviderInfoProps) => {
 
   const { providerName, providerField, schedule, bio } = provider;
-  console.log(schedule, "schedule");
 
   return (
     <div className="rounded-[20px] shadow-[0px_1.23px_4.94px_0px_#D4E0EB] grid 2xl:grid-cols-3 gap-8 py-5 px-12">
