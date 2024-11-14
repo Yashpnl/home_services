@@ -31,7 +31,7 @@ const PhoneNumber = () => {
     const [error, setError] = useState<string | null>(null);
     const router = useRouter();
     const [loading, setLoading] = useState(false)
-    const { setConfirmationResult } = useGlobalContext();
+    const { setConfirmationResult, setHomeserviceToken } = useGlobalContext();
 
     // Extract form data from session storage
     const [first_name, setFirstName] = useState<string | null>(null);
@@ -82,7 +82,7 @@ const PhoneNumber = () => {
                 };
 
                 localStorage.setItem("homeservice_userData", JSON.stringify(userData));
-
+                setHomeserviceToken(response?.data?.data?.token)
                 if (phone_number) {
                     const recaptcha = new RecaptchaVerifier(auth, "recaptcha", { size: "invisible" });
                     const confirmationResult = await signInWithPhoneNumber(auth, `+${country_code}` + phone_number, recaptcha);
