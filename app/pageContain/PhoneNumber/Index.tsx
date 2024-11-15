@@ -39,12 +39,9 @@ const PhoneNumber = () => {
     const [password, setPassword] = useState<string | null>(null);
 
     useEffect(() => {
-        // Check if running in the client
-        if (typeof window !== 'undefined') {
-            setFirstName(sessionStorage.getItem('first_name'));
-            setEmail(sessionStorage.getItem('email'));
-            setPassword(sessionStorage.getItem('password'));
-        }
+        setFirstName(sessionStorage.getItem('first_name'));
+        setEmail(sessionStorage.getItem('email'));
+        setPassword(sessionStorage.getItem('password'));
     }, []);
 
 

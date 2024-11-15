@@ -36,7 +36,7 @@ const CheckoutSection = ({ serviceId }: { serviceId: number }) => {
 
     useEffect(() => {
         const calculatedTotal = cartIten?.reduce((sum, pkg) => sum + (pkg?.totalPrice || 0), 0);
-        setTotalPrice(calculatedTotal); 
+        setTotalPrice(calculatedTotal);
     }, [cartIten]);
 
     function createDateAsUTC(date: any) {
@@ -82,9 +82,9 @@ const CheckoutSection = ({ serviceId }: { serviceId: number }) => {
             <div className="width-container">
                 {checkoutAddress ?
                     <>
-                        <div className="grid xl:grid-cols-2 gap-10">
+                        <div className="">
                             {paymentComponent ?
-                                <div className="flex flex-col gap-7">
+                                <div className="grid xl:grid-cols-2 gap-10">
                                     <div className="rounded-[20px] shadow-[0px_1.23px_4.94px_0px_#D4E0EB] py-5 px-7 h-fit min-h-[188px]">
                                         {cartIten && cartIten?.map((pkg) => (
                                             <div className="flex flex-col sm:flex-row gap-5 justify-between">
@@ -161,89 +161,79 @@ const CheckoutSection = ({ serviceId }: { serviceId: number }) => {
                     </> :
                     <>
                         <div className="grid xl:grid-cols-2 gap-10">
-                            <div className="rounded-[20px] shadow-[0px_1.23px_4.94px_0px_#D4E0EB] p-7 flex flex-col gap-5 h-fit">
-                                <h1 className="font-semibold text-xl">Account</h1>
-                                <span className="text-sm">To book the service, please login or sign up</span>
-                                <Link href={'/signin '} className="text-[#0C3469] text-lg font-bold bg-[#F9AA58] rounded-full p-2 flex items-center justify-center">
-                                    Login
-                                </Link>
+                            <div className="rounded-[20px] shadow-[0px_1.23px_4.94px_0px_#D4E0EB] py-5 px-7 h-fit min-h-[188px] flex flex-col gap-5">
+                                {cartIten && cartIten?.map((pkg) => (
+                                    <div className="flex flex-col sm:flex-row gap-5 justify-between">
+                                        <div className="flex flex-col gap-5 lg:w-[60%] w-full">
+                                            <span className="text-xl font-semibold">{pkg?.packageName}</span>
+                                            <div className="flex gap-5 items-center justify-between w-full">
+                                                <span className="text-xs">{pkg?.description}</span>
+                                                <span className="bg-[#D4E0EB] shadow-[0px_1.23px_4.94px_0px_#D4E0EB] rounded-md size-10 flex items-center justify-center text-lg font-semibold">{pkg?.quantity}</span>
+                                            </div>
+                                        </div>
+                                        <span className="text-lg md:text-2xl font-semibold text-primary lg:w-[20%] w-full flex justify-center items-center">₹ {pkg?.totalPrice}</span>
+                                    </div>
+                                ))}
                             </div>
 
-                            <div className="flex flex-col gap-7">
-                                <div className="rounded-[20px] shadow-[0px_1.23px_4.94px_0px_#D4E0EB] py-5 px-7 h-fit min-h-[188px] flex flex-col gap-5">
-                                    {cartIten && cartIten?.map((pkg) => (
-                                        <div className="flex flex-col sm:flex-row gap-5 justify-between">
-                                            <div className="flex flex-col gap-5 lg:w-[60%] w-full">
-                                                <span className="text-xl font-semibold">{pkg?.packageName}</span>
-                                                <div className="flex gap-5 items-center justify-between w-full">
-                                                    <span className="text-xs">{pkg?.description}</span>
-                                                    <span className="bg-[#D4E0EB] shadow-[0px_1.23px_4.94px_0px_#D4E0EB] rounded-md size-10 flex items-center justify-center text-lg font-semibold">{pkg?.quantity}</span>
-                                                </div>
-                                            </div>
-                                            <span className="text-lg md:text-2xl font-semibold text-primary lg:w-[20%] w-full flex justify-center items-center">₹ {pkg?.totalPrice}</span>
-                                        </div>
-                                    ))}
-                                </div>
+                            <div className="rounded-[20px] shadow-[0px_1.23px_4.94px_0px_#D4E0EB] py-5 px-7 h-fit">
+                                <div className="grid sm:grid-cols-2 gap-5">
+                                    <div className="flex flex-col gap-5 w-full">
+                                        <h1 className="font-semibold text-xl">Select Date</h1>
+                                        <Calendar
+                                            mode="single"
+                                            selected={date}
+                                            onSelect={getTiming}
+                                            className="rounded-md w-full shadow-[0px_1.23px_4.94px_0px_#D4E0EB]"
+                                        />
+                                    </div>
+                                    <div className="flex flex-col gap-5">
+                                        <h1 className="font-semibold text-xl">Select Hours</h1>
+                                        <div className="overflow-auto w-full h-[300px]">
+                                            <div className="flex flex-wrap gap-2 mb-4">
+                                                {availableTimes.length > 0 ? (
+                                                    availableTimes.map((timeSlot, index) => {
+                                                        if (timeSlot.available) {
+                                                            const startHour = parseInt(timeSlot.start_time.split(":")[0]);
+                                                            const startMinutes = timeSlot.start_time.split(":")[1];
+                                                            const endHour = parseInt(timeSlot.end_time.split(":")[0]);
+                                                            const endMinutes = timeSlot.end_time.split(":")[1];
 
-                                <div className="rounded-[20px] shadow-[0px_1.23px_4.94px_0px_#D4E0EB] py-5 px-7 h-fit">
-                                    <div className="grid sm:grid-cols-2 gap-5">
-                                        <div className="flex flex-col gap-5 w-full">
-                                            <h1 className="font-semibold text-xl">Select Date</h1>
-                                            <Calendar
-                                                mode="single"
-                                                selected={date}
-                                                onSelect={getTiming}
-                                                className="rounded-md w-full shadow-[0px_1.23px_4.94px_0px_#D4E0EB]"
-                                            />
-                                        </div>
-                                        <div className="flex flex-col gap-5">
-                                            <h1 className="font-semibold text-xl">Select Hours</h1>
-                                            <div className="overflow-auto w-full h-[300px]">
-                                                <div className="flex flex-wrap gap-2 mb-4">
-                                                    {availableTimes.length > 0 ? (
-                                                        availableTimes.map((timeSlot, index) => {
-                                                            if (timeSlot.available) {
-                                                                const startHour = parseInt(timeSlot.start_time.split(":")[0]);
-                                                                const startMinutes = timeSlot.start_time.split(":")[1];
-                                                                const endHour = parseInt(timeSlot.end_time.split(":")[0]);
-                                                                const endMinutes = timeSlot.end_time.split(":")[1];
+                                                            const formatTime = (hour, minutes) => {
+                                                                const period = hour >= 12 ? "PM" : "AM";
+                                                                const formattedHour = hour % 12 || 12; // Convert 0 and 12-hour times to 12 for AM/PM format
+                                                                return `${formattedHour}:${minutes} ${period}`;
+                                                            };
 
-                                                                const formatTime = (hour, minutes) => {
-                                                                    const period = hour >= 12 ? "PM" : "AM";
-                                                                    const formattedHour = hour % 12 || 12; // Convert 0 and 12-hour times to 12 for AM/PM format
-                                                                    return `${formattedHour}:${minutes} ${period}`;
-                                                                };
-
-                                                                const startTime = formatTime(startHour, startMinutes);
-                                                                const endTime = formatTime(endHour, endMinutes);
-                                                                return (
-                                                                    <button
-                                                                        key={index}
-                                                                        className={`px-4 py-2 text-sm font-medium text-[#0054A5] rounded-lg ${selectedServiceType === timeSlot.start_time
-                                                                            ? 'bg-[#0054A5] text-white'
-                                                                            : 'shadow-[0px_1px_4px_0px_#D4E0EB] text-primary'
-                                                                            }`}
-                                                                        onClick={() => setSelectedServiceType(timeSlot?.start_time)}
-                                                                    >
-                                                                        {startTime} - {endTime}
-                                                                    </button>
-                                                                );
-                                                            }
-                                                            return null;
-                                                        })
-                                                    ) : (
-                                                        <p>No working hours available for this day.</p>
-                                                    )}
-                                                </div>
+                                                            const startTime = formatTime(startHour, startMinutes);
+                                                            const endTime = formatTime(endHour, endMinutes);
+                                                            return (
+                                                                <button
+                                                                    key={index}
+                                                                    className={`px-4 py-2 text-sm font-medium text-[#0054A5] rounded-lg ${selectedServiceType === timeSlot.start_time
+                                                                        ? 'bg-[#0054A5] text-white'
+                                                                        : 'shadow-[0px_1px_4px_0px_#D4E0EB] text-primary'
+                                                                        }`}
+                                                                    onClick={() => setSelectedServiceType(timeSlot?.start_time)}
+                                                                >
+                                                                    {startTime} - {endTime}
+                                                                </button>
+                                                            );
+                                                        }
+                                                        return null;
+                                                    })
+                                                ) : (
+                                                    <p>No working hours available for this day.</p>
+                                                )}
                                             </div>
                                         </div>
                                     </div>
-                                    <Button
-                                        onClick={() => setCheckoutAddress(true)}
-                                        className="text-[#0C3469] text-lg font-bold bg-[#F9AA58] rounded-full py-4 sm:py-6 sm:px-20 w-full my-20">
-                                        Book
-                                    </Button>
                                 </div>
+                                <Button
+                                    onClick={() => setCheckoutAddress(true)}
+                                    className="text-[#0C3469] text-lg font-bold bg-[#F9AA58] rounded-full py-4 sm:py-6 sm:px-20 w-full my-20">
+                                    Book
+                                </Button>
                             </div>
                         </div>
                     </>

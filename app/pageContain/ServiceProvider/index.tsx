@@ -64,31 +64,37 @@ const ServiceProvider = ({ provider, providerId }: { provider: Provider, provide
       <div className="width-container">
         <div className="grid lg:grid-cols-[35rem_1fr] gap-10 grid-rows-[auto,auto]">
           <ServiceProviderImage serviceimages={provider.serviceimages} />
-          <ServiceProviderInfo
-            handlePackges={handlePackges}
-            provider={{
-              providerName: provider.service_provider_first_name,
-              providerField: provider.category_name,
-              schedule: scheduleByDay,
-              bio: provider.description
-            }}
-          />
-          <ServiceProviderReview
-            rating={provider.rating}
-            orders={provider.total_order}
-            experience={provider.experience}
-            c_name={provider.c_name}
-            review={provider.review}
-            date={provider.date}
-            star={provider.star}
-            c_photo={provider.c_photo}
-          />
-        </div>
-        <div className="grid lg:grid-cols-[35rem_1fr] gap-10 pt-10">
-          <div />
-          {packages && <PackagesSection providerId={providerId} servicepricings={provider.servicepricings} />}
+          {!packages ? (
+            <>
+              <ServiceProviderInfo
+                handlePackges={handlePackges}
+                provider={{
+                  providerName: provider.service_provider_first_name,
+                  providerField: provider.category_name,
+                  schedule: scheduleByDay,
+                  bio: provider.description,
+                }}
+              />
+              <ServiceProviderReview
+                rating={provider.rating}
+                orders={provider.total_order}
+                experience={provider.experience}
+                c_name={provider.c_name}
+                review={provider.review}
+                date={provider.date}
+                star={provider.star}
+                c_photo={provider.c_photo}
+              />
+            </>
+          ) : (
+            <PackagesSection
+              providerId={providerId}
+              servicepricings={provider.servicepricings}
+            />
+          )}
         </div>
       </div>
+
     </>
   );
 };

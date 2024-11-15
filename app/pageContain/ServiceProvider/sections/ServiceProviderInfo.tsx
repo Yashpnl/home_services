@@ -1,4 +1,8 @@
+// @ts-nocheck
+
+"use client"
 import { Button } from "@/components/ui/button";
+import { useState } from "react";
 
 interface ProviderInfoProps {
   handlePackges: () => void;
@@ -19,6 +23,11 @@ interface ProviderInfoProps {
 const ServiceProviderInfo = ({ handlePackges, provider }: ProviderInfoProps) => {
 
   const { providerName, providerField, schedule, bio } = provider;
+  const [selectedDay, setSelectedDay] = useState("");
+
+  const handleDaySelect = (day) => {
+    setSelectedDay(day);
+  };
 
   return (
     <div className="rounded-[20px] shadow-[0px_1.23px_4.94px_0px_#D4E0EB] grid 2xl:grid-cols-3 gap-8 py-5 px-12">
@@ -26,20 +35,52 @@ const ServiceProviderInfo = ({ handlePackges, provider }: ProviderInfoProps) => 
         <h1 className="font-semibold text-2xl">{providerName}</h1>
         <span>{providerField}</span>
         <span className="pt-2 font-semibold text-xl">Available</span>
-        {Object.entries(schedule).map(([day, time]) => (
-          <div key={day} className="pt-2">
-            <span className="font-medium">{day.charAt(0).toUpperCase() + day.slice(1)}:</span>
-            <div className="flex items-center gap-4">
-              <span className="shadow-[0px_1.23px_4.94px_0px_#D4E0EB] rounded-md p-2 w-full text-center">
-                {time.startTime || "-"}
-              </span>
-              <span className="text-[#919191]">To</span>
-              <span className="shadow-[0px_1.23px_4.94px_0px_#D4E0EB] rounded-md p-2 w-full text-center">
-                {time.endTime || "-"}
-              </span>
-            </div>
+        <div className="w-full">
+          {/* Dropdown Button */}
+          <div className="relative">
+            <button
+              className="bg-gray-200 px-4 py-2 rounded-md shadow-md w-full text-left"
+              onClick={() =>
+                setSelectedDay(selectedDay ? "" : "open") // Toggles dropdown
+              }
+            >
+              {selectedDay || "Select a Day"}
+            </button>
+
+            {/* Dropdown List */}
+            {selectedDay === "open" && (
+              <div className="absolute z-10 bg-white border rounded-md mt-2 w-full shadow-lg">
+                {Object.keys(schedule).map((day) => (
+                  <div
+                    key={day}
+                    className="cursor-pointer p-2 hover:bg-gray-100"
+                    onClick={() => handleDaySelect(day)}
+                  >
+                    {day.charAt(0).toUpperCase() + day.slice(1)}
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
-        ))}
+
+          {/* Day Schedule */}
+          {selectedDay && selectedDay !== "open" && (
+            <div className="pt-4">
+              <span className="font-medium">
+                {selectedDay.charAt(0).toUpperCase() + selectedDay.slice(1)}:
+              </span>
+              <div className="flex items-center gap-4 pt-2">
+                <span className="shadow-[0px_1.23px_4.94px_0px_#D4E0EB] rounded-md p-2 w-full text-center">
+                  {schedule[selectedDay]?.startTime || "-"}
+                </span>
+                <span className="text-[#919191]">To</span>
+                <span className="shadow-[0px_1.23px_4.94px_0px_#D4E0EB] rounded-md p-2 w-full text-center">
+                  {schedule[selectedDay]?.endTime || "-"}
+                </span>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
       <div className="text-[#565656] flex flex-col gap-2">
         <span className="font-semibold text-xl">Bio</span>

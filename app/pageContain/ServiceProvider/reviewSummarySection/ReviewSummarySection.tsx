@@ -63,7 +63,7 @@ const ReviewSummarySection = () => {
                         'Authorization': `Bearer ${token}`
                     },
                 });
-            if (response?.status === 200) {
+            if (response?.data?.status === 200) {
                 toast.success(response?.data?.message)
                 router.push("/")
             }

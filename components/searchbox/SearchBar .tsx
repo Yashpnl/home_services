@@ -63,7 +63,7 @@ const SearchBar = () => {
                 <input
                     type="text"
                     placeholder="Search here..."
-                    className="flex-grow bg-transparent text-white focus:outline-none"
+                    className="flex-grow bg-transparent focus:outline-none"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                 />

@@ -18,11 +18,10 @@ const ProfileSection = () => {
     const [userId, setUserId] = useState<string | null>(null);
 
     useEffect(() => {
-        if (typeof window !== 'undefined') {  // Ensure code runs only on client
-            const storedData = JSON.parse(localStorage.getItem("homeservice_userData") || '{}');
-            setToken(storedData?.token || null);
-            setUserId(storedData?.userId || null);
-        }
+        const storedData = JSON.parse(localStorage.getItem("homeservice_userData") || '{}');
+        setToken(storedData?.token || null);
+        setUserId(storedData?.userId || null);
+
     }, []);
 
 
@@ -41,7 +40,6 @@ const ProfileSection = () => {
             try {
                 const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/users/user_details`, { headers });
                 const userData = res?.data?.data
-
                 // Set form values using `setValue`
                 setValue('first_name', userData.first_name || '');
                 setValue('date_of_birth', userData.date_of_birth || '');
@@ -59,22 +57,30 @@ const ProfileSection = () => {
 
     const onSubmit = async (data: any) => {
         try {
-            const requestBody = {
-                id: userId,
-                first_name: data.first_name,
-                last_name: data.last_name,
-                email: data.email,
-                phone_number: data.phone_number,
-                date_of_birth: data.date_of_birth,
-                profile_image_url: selectedFile
-            };
+            // Create a FormData object to send as multipart/form-data
+            const formData = new FormData();
+
+            formData.append('id', userId || '');
+            formData.append('first_name', data.first_name || '');
+            formData.append('last_name', data.last_name || '');
+            formData.append('email', data.email || '');
+            formData.append('phone_number', data.phone_number || '');
+            formData.append('date_of_birth', data.date_of_birth || '');
+
+            // Append the selected image file if it exists
+            if (selectedFile) {
+                formData.append('profile_image', selectedFile); // Adjust key if the backend expects a specific key name
+            }
+
             const headers = {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-                'Authorization': `Bearer ${token}`,
+                'Authorization': `Bearer ${token}`, // Authorization header without Content-Type, as FormData sets it automatically
             };
 
-            const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/users/update_profile`, requestBody, { headers });
+            const res = await axios.post(
+                `${process.env.NEXT_PUBLIC_API_URL}/users/update_profile`,
+                formData,
+                { headers }
+            );
 
             if (res?.data?.success) {
                 toast.success(res?.data?.message || "Profile updated successfully!");
@@ -86,6 +92,7 @@ const ProfileSection = () => {
             toast.error("An error occurred while updating the profile.");
         }
     };
+
 
     // Handle image change
     const handleImageChange = (event) => {
