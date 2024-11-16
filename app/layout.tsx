@@ -5,6 +5,7 @@ import { Toaster } from "react-hot-toast";
 import GlobalProvider from "@/Context/GlobalContext";
 import Header from "@/components/header/Header";
 import Footer from "@/components/footer/Footer";
+import { cookies } from "next/headers";
 
 const raleway = Raleway({
   subsets: ["latin"],
@@ -22,19 +23,28 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
+  const token = cookies().get("homeservice_token")?.value
+
   return (
     <html lang="en">
       <body className={`${raleway.variable} antialiased`}>
         <NextTopLoader color="#F9AA58" />
         <Toaster />
         <GlobalProvider>
-          <div className="h-screen flex flex-col">
-            <Header />
-            <div className="flex-grow">
-              {children}
+          {token ?
+            <div className="h-screen flex flex-col">
+              <Header />
+              <div className="flex-grow">
+                {children}
+              </div>
+              <Footer />
             </div>
-            <Footer />
-          </div>
+            :
+            <>
+              {children}
+            </>
+          }
         </GlobalProvider>
       </body>
     </html>
