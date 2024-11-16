@@ -3,8 +3,7 @@ import Image from "next/image"
 const ServiceCard = ({ serviceicon, servicename, onClick }: { serviceicon: string, servicename: string, onClick?: () => void }) => {
     return (
         <div className="flex items-center justify-between flex-col gap-1 min-h-[200px] h-[200px] px-10 rounded-lg shadow-[0px_1.23px_4.94px_0px_#D4E0EB] cursor-pointer"
-            onClick={onClick}
-            style={{ boxShadow: '0px 1.23px 4.94px 0px #D4E0EB' }}>
+            onClick={onClick}>
             <Image
                 src={serviceicon}
                 alt={servicename}

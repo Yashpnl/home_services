@@ -18,12 +18,13 @@ import CheckoutAddress from "../components/CheckoutAddress"
 const CheckoutSection = ({ serviceId }: { serviceId: number }) => {
 
     const router = useRouter()
-    const [date, setDate] = useState<Date | undefined>(new Date())
+    const [date, setDate] = useState<Date | undefined>(undefined)
     const [selectedServiceType, setSelectedServiceType] = useState<string>('ALL');
     const [paymentComponent, setPaymentComponent] = useState(false);
     const [checkoutAddress, setCheckoutAddress] = useState(false);
     const [availableTimes, setAvailableTimes] = useState([]);
     const [totalPrice, setTotalPrice] = useState('');
+    const [loading, setLoading] = useState(false)
     const storedData = JSON.parse(localStorage.getItem("homeservice_userData") || '{}');
     const token = storedData?.token;
 
@@ -43,13 +44,13 @@ const CheckoutSection = ({ serviceId }: { serviceId: number }) => {
         return new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes(), date.getSeconds()));
     }
 
-    const onSubmit = async (e) => {
+    const handleDataChange = async () => {
+        setLoading(true)
         try {
-            const bookingDate = createDateAsUTC(new Date(e));
-
+            const bookingDate = createDateAsUTC(new Date(date));
             const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/orders/select_time_list`, {
                 "services_id": serviceId,
-                "booking_date": createDateAsUTC(new Date(e))
+                "booking_date": bookingDate
             }, {
                 headers: {
                     'Content-Type': 'application/json',
@@ -68,18 +69,19 @@ const CheckoutSection = ({ serviceId }: { serviceId: number }) => {
 
         } catch (error) {
             error instanceof Error ? error.message : 'An unknown error occurred';
+            setLoading(false)
+        } finally {
+            setLoading(false)
         }
     };
 
-
-    const getTiming = (e) => {
-        setDate(e)
-        onSubmit(e)
-    }
+    useEffect(() => {
+        date && handleDataChange()
+    }, [date, selectedServiceType])
 
     return (
         <>
-            <div className="width-container">
+            <div className="width-container mt-10">
                 {checkoutAddress ?
                     <>
                         <div className="">
@@ -183,7 +185,7 @@ const CheckoutSection = ({ serviceId }: { serviceId: number }) => {
                                         <Calendar
                                             mode="single"
                                             selected={date}
-                                            onSelect={getTiming}
+                                            onSelect={(date) => setDate(date)}
                                             className="rounded-md w-full shadow-[0px_1.23px_4.94px_0px_#D4E0EB]"
                                         />
                                     </div>
@@ -230,9 +232,12 @@ const CheckoutSection = ({ serviceId }: { serviceId: number }) => {
                                     </div>
                                 </div>
                                 <Button
+                                    disabled={loading}
                                     onClick={() => setCheckoutAddress(true)}
-                                    className="text-[#0C3469] text-lg font-bold bg-[#F9AA58] rounded-full py-4 sm:py-6 sm:px-20 w-full my-20">
-                                    Book
+                                    className="text-[#0C3469] text-lg font-bold bg-[#F9AA58] rounded-full py-4 sm:py-6 sm:px-20 w-full my-20 disabled:bg-muted">
+                                    {loading ? "loading..." :
+                                        "Book"
+                                    }
                                 </Button>
                             </div>
                         </div>

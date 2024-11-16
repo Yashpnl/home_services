@@ -3,6 +3,8 @@ import "./globals.css";
 import NextTopLoader from "nextjs-toploader";
 import { Toaster } from "react-hot-toast";
 import GlobalProvider from "@/Context/GlobalContext";
+import Header from "@/components/header/Header";
+import Footer from "@/components/footer/Footer";
 
 const raleway = Raleway({
   subsets: ["latin"],
@@ -26,7 +28,13 @@ export default function RootLayout({
         <NextTopLoader color="#F9AA58" />
         <Toaster />
         <GlobalProvider>
-          {children}
+          <div className="h-screen flex flex-col">
+            <Header />
+            <div className="flex-grow">
+              {children}
+            </div>
+            <Footer />
+          </div>
         </GlobalProvider>
       </body>
     </html>

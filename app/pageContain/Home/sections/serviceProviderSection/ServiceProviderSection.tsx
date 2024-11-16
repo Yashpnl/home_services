@@ -58,7 +58,7 @@ const ServiceProviderSection = () => {
     const providersToShow = results.length > 0 ? results : allProviders;
 
     return (
-        <section className="w-[90%] mx-auto my-20">
+        <section className="w-[90%] mx-auto my-10 sm:my-20">
             <div className="flex items-center justify-between">
                 <h3 className="text-xl font-semibold">Service Providers</h3>
                 <button

@@ -20,7 +20,6 @@ const ReviewSummarySection = () => {
 
         // Prepare the `product` array based on `cartItems`
         const formattedProduct = cartItems.map((item: any) => ({
-
             service_pricing_id: item?.service_pricing_id,
             quantity: item?.quantity,
             service_package: item?.packageName
@@ -63,9 +62,14 @@ const ReviewSummarySection = () => {
                         'Authorization': `Bearer ${token}`
                     },
                 });
-            if (response?.data?.status === 200) {
+            if (response?.status === 200) {
                 toast.success(response?.data?.message)
                 router.push("/")
+                localStorage.removeItem("checkoutAddressData")
+                localStorage.removeItem("cartIten")
+                localStorage.removeItem("providerData")
+            }else{
+                toast.error("Error while order booking")
             }
         } catch (error) {
             error instanceof Error ? error.message : 'An unknown error occurred';
@@ -74,7 +78,7 @@ const ReviewSummarySection = () => {
 
     return (
         <>
-            <div className="width-container flex flex-col gap-5 lg:flex-row items-center">
+            <div className="width-container flex flex-col gap-5 lg:flex-row items-center mt-10">
                 <div className="rounded-lg shadow-[0px_1.23px_4.94px_0px_#D4E0EB] py-5 px-7 h-fit min-w-[340px] sm:min-w-[500px] w-full min-h-[300px]">
                     <div className="flex justify-between items-center w-full border-b pb-3">
                         <span className="md:text-2xl font-semibold">{storedProviderData?.providerName}</span>

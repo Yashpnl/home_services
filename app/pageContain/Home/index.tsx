@@ -7,11 +7,9 @@ import ServiceProviderSection from './sections/serviceProviderSection/ServicePro
 const Home = () => {
     return (
         <>
-            <Header />
             <SearchBox />
             <PopularSection />
             <ServiceProviderSection />
-            <Footer />
         </>
     )
 }

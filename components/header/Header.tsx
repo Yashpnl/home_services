@@ -43,13 +43,14 @@ const Header = () => {
 
   return (
     <>
-      <header className="w-[90%] mx-auto bg-white flex items-center justify-between py-6 mb-7">
+      <header className="w-[90%] mx-auto bg-white flex items-center justify-between py-6 mb-3 sm:mb-7 sm:sticky top-0 z-50">
         <Link href={'/'}>
           <Image
             src={logo}
             alt="homeservices"
-            width={100}
-            height={100}
+            width={70}
+            height={70}
+            className="w-full h-full"
             quality={100}
           />
         </Link>

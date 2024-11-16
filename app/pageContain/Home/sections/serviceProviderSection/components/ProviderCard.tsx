@@ -20,7 +20,7 @@ const ProviderCard: React.FC<ProviderCardProps> = ({
 }) => {
 
     return (
-        <div className="flex items-center justify-center flex-col gap-3 rounded-lg shadow-[0px_1.23px_4.94px_0px_#D4E0EB] w-[250px] p-3 cursor-pointer h-full"
+        <div className="flex items-center justify-center flex-col gap-3 rounded-lg shadow-[0px_1.23px_4.94px_0px_#D4E0EB] sm:w-[250px] p-3 cursor-pointer h-full w-full" 
             onClick={onClick}>
             <Image
                 src={providerImage}

@@ -61,7 +61,7 @@ const ServiceProvider = ({ provider, providerId }: { provider: Provider, provide
 
   return (
     <>
-      <div className="width-container">
+      <div className="width-container mt-10">
         <div className="grid lg:grid-cols-[35rem_1fr] gap-10 grid-rows-[auto,auto]">
           <ServiceProviderImage serviceimages={provider.serviceimages} />
           {!packages ? (

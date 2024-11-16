@@ -8,9 +8,9 @@ const Footer = () => {
       <div>
         <Image
           src={logo}
-          width={100}
-          height={100}
           quality={100}
+          width={70}
+          height={70}
           alt="homeservices"
           className="w-full h-full"
         />

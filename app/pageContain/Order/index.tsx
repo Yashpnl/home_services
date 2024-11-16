@@ -1,6 +1,4 @@
 "use client"
-import Footer from "@/components/footer/Footer"
-import Header from "@/components/header/Header"
 import Tabbar from "./components/Tabbar"
 import { useState } from "react"
 import CurrentOrderSection from "./sections/CurrentOrderSection"
@@ -12,7 +10,6 @@ const Order = () => {
 
     return (
         <>
-            <Header />
             <Tabbar firstTab="Current Order" secondTab="History" activeTab={activeTab} setActiveTab={setActiveTab} />
             {
                 activeTab === "Current Order" ?
@@ -20,7 +17,6 @@ const Order = () => {
                     :
                     <HistorySection />
             }
-            <Footer />
         </>
     )
 }

@@ -1,17 +1,17 @@
 // @ts-nocheck
 
 import CheckoutSection from "@/app/pageContain/ServiceProvider/checkoutSection/CheckoutSection"
-import Footer from "@/components/footer/Footer"
-import Header from "@/components/header/Header"
 
 const page = ({ params }: { params: { serviceProvider: string } }) => {
+
     const serviceId = params?.serviceProvider
 
     return (
         <>
-            <Header />
+            <div className="width-container" >
+                ServiceProvider  &gt; <span className="border-b border-black text-black font-semibold"> Checkout</span>
+            </div>
             <CheckoutSection serviceId={serviceId} />
-            <Footer />
         </>
     )
 }

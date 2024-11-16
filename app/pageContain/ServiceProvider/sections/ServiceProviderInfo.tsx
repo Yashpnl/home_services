@@ -3,6 +3,7 @@
 "use client"
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
+import { RiArrowDropDownLine } from "react-icons/ri";
 
 interface ProviderInfoProps {
   handlePackges: () => void;
@@ -39,12 +40,13 @@ const ServiceProviderInfo = ({ handlePackges, provider }: ProviderInfoProps) => 
           {/* Dropdown Button */}
           <div className="relative">
             <button
-              className="bg-gray-200 px-4 py-2 rounded-md shadow-md w-full text-left"
+              className="px-4 py-2 rounded-md shadow-[0px_1.23px_4.94px_0px_#D4E0EB] w-full text-left flex items-center justify-between outline-none"
               onClick={() =>
-                setSelectedDay(selectedDay ? "" : "open") // Toggles dropdown
+                setSelectedDay(selectedDay ? "" : "open")
               }
             >
               {selectedDay || "Select a Day"}
+              <RiArrowDropDownLine />
             </button>
 
             {/* Dropdown List */}

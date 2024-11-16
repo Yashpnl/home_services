@@ -48,7 +48,7 @@ const PopularSection = () => {
 
     return (
         <>
-            <section className="w-[90%] mx-auto mt-20">
+            <section className="w-[90%] mx-auto mt-10 sm:mt-20">
                 <div className="flex items-center justify-between">
                     <h3 className="text-xl font-semibold">Popular Services</h3>
                     <button

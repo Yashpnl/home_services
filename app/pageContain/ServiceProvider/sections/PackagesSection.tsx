@@ -74,7 +74,7 @@ const PackagesSection = ({ servicepricings, providerId }: { servicepricings: num
             };
         });
 
-        localStorage.setItem("cartItems", JSON.stringify(cartData));
+        localStorage.setItem("cartIten", JSON.stringify(cartData));
         router.push(`/service-provider/${providerId}/checkout`);
     };
 

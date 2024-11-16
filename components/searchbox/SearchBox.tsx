@@ -3,7 +3,7 @@ import SearchBar from "./SearchBar "
 const SearchBox = () => {
 
     return (
-        <main className="w-[90%] mx-auto bg-primary rounded-2xl py-7 px-7 sm:px-16 sm:py-10 flex flex-col md:flex-row gap-5 items-center justify-between relative mt-10"
+        <main className="w-[90%] mx-auto bg-primary rounded-2xl py-7 px-7 sm:px-16 sm:py-10 flex flex-col md:flex-row gap-5 items-center justify-between relative sm:mt-10"
             style={{ boxShadow: '0px 1.23px 4.94px 0px #D4E0EB' }}
         >
             <SearchBar />
