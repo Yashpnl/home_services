@@ -1,6 +1,7 @@
 // @ts-nocheck
 
 import ServiceProvider from "@/app/pageContain/ServiceProvider";
+import ServiceProviderSuggestion from "@/app/pageContain/ServiceProvider/components/ServiceProviderSuggestion";
 import { Breadcrumb } from "@/components/ui/breadcrumb";
 import axios from "axios";
 import { cookies } from 'next/headers';
@@ -50,10 +51,11 @@ const page = async ({ params }: { params: { serviceProvider: string } }) => {
 
     return (
       <>
-        <div className="width-container" >
+        <div className="width-container">
           <span className="border-b border-black text-black font-semibold">ServiceProvider</span>
         </div>
         <ServiceProvider provider={filteredProvider} providerId={params.serviceProvider} />
+        <ServiceProviderSuggestion />
       </>
     );
 
