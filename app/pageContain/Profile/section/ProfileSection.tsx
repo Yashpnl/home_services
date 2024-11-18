@@ -2,6 +2,7 @@
 
 "use client"
 import axios from 'axios';
+import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
@@ -10,6 +11,7 @@ import 'react-phone-input-2/lib/style.css';
 
 const ProfileSection = () => {
 
+    const router = useRouter()
     const { register, handleSubmit, setValue, formState: { errors }, clearErrors } = useForm();
     const [selectedImage, setSelectedImage] = useState(null);
     const [selectedFile, setSelectedFile] = useState(null);
@@ -82,7 +84,8 @@ const ProfileSection = () => {
             );
 
             if (res?.data?.success) {
-                toast.success(res?.data?.message || "Profile updated successfully!");
+                toast.success("Profile updated successfully!");
+                router.push("/")
             } else {
                 toast.error(res?.data?.message || "Failed to update profile.");
             }
@@ -97,7 +100,7 @@ const ProfileSection = () => {
     const handleImageChange = (event) => {
         const file = event.target.files[0];
 
-        if (file) {            
+        if (file) {
             const imageURL = URL.createObjectURL(file);
             setSelectedImage(imageURL);
             setSelectedFile(file);
