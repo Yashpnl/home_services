@@ -4,9 +4,11 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import ProviderCard from "../../Home/sections/serviceProviderSection/components/ProviderCard";
+import { useRouter } from "next/navigation";
 
 const ServiceProviderSuggestion = () => {
 
+    const router = useRouter()
     const [token, setToken] = useState(null);
     const [serviceProviderList, setServiceProviderList] = useState(null);
 
