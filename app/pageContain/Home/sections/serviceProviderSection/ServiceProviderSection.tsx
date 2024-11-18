@@ -31,7 +31,6 @@ const ServiceProviderSection = () => {
 
     const [showAll, setShowAll] = useState(false);
     const [allProviders, setAllProviders] = useState<Provider[]>([]);
-    const initialServicesToShow = 5;
 
     const handleToggleViewAll = () => {
         setShowAll(!showAll);
@@ -63,28 +62,36 @@ const ServiceProviderSection = () => {
                 <h3 className="text-xl font-semibold">Service Providers</h3>
                 <button
                     className="text-xl text-primary"
-                    onClick={handleToggleViewAll}
+                    onClick={() => router.push(`/service-provider`)}
                 >
-                    {providersToShow?.length >= initialServicesToShow ?
-                        `${showAll ? 'View less' : 'View all'}` : ''
-                    }
+                    View all
                 </button>
             </div>
 
             <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5 gap-5 pt-5">
-                {providersToShow?.slice(0, showAll ? providersToShow.length : initialServicesToShow)?.map((services) => (
-                    <ProviderCard
-                        key={services.id}
-                        providerImage={services?.serviceimages[0]?.image_url}
-                        providerName={services?.service_provider_first_name}
-                        providerField={services?.category_name}
-                        price={services?.servicepricings[0]?.price}
-                        rating={services?.rating}
-                        onClick={() => router.push(`/service-provider/${services?.id}`)}
-                    />
-                ))}
+                {providersToShow?.length > 0 ? (
+                    providersToShow?.map((services) => (
+                        <ProviderCard
+                            key={services.id}
+                            providerImage={services?.serviceimages[0]?.image_url}
+                            providerName={services?.service_provider_first_name}
+                            providerField={services?.category_name}
+                            price={services?.servicepricings[0]?.price}
+                            rating={services?.rating}
+                            onClick={() => router.push(`/service-provider/${services?.id}`)}
+                        />
+                    ))
+                    ) : (
+                    [1, 2, 3, 4, 5].map((_, index) => (
+                        <div
+                            key={index}
+                            className="h-[200px] px-10 rounded-lg shadow-[0px_1.23px_4.94px_0px_#D4E0EB] cursor-pointer bg-gray-200 animate-pulse"
+                        />
+                    ))
+                )
+                }
             </div>
-        </section>
+        </section >
     );
 }
 

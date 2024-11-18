@@ -55,9 +55,6 @@ const PopularSection = () => {
                         className="text-xl text-primary"
                         onClick={() => router.push(`/services`)}
                     >
-                        {/* {allServices?.length >= initialServicesToShow ?
-                            `${showAll ? 'View less' : 'View all'}` : ''
-                        } */}
                         View all
                     </button>
                 </div>
@@ -76,7 +73,7 @@ const PopularSection = () => {
                         [1, 2, 3, 4, 5].map((_, index) => (
                             <div
                                 key={index}
-                                className="min-h-[200px] h-[200px] px-10 rounded-lg shadow-[0px_1.23px_4.94px_0px_#D4E0EB] cursor-pointer bg-gray-200 animate-pulse"
+                                className="h-[200px] px-10 rounded-lg shadow-[0px_1.23px_4.94px_0px_#D4E0EB] cursor-pointer bg-gray-200 animate-pulse"
                             />
                         ))
                     )}

@@ -3,7 +3,7 @@ import Image from 'next/image'
 
 const loading = () => {
     return (
-        <div className='fixed inset-0 flex items-center justify-center bg-secondary/60 z-50'>
+        <div className='fixed inset-0 flex items-center justify-center bg-gray-200 z-50'>
             <Image
                 src={logo}
                 alt="homeservices"

@@ -7,7 +7,7 @@ interface ProviderCardProps {
     providerField: string;
     price: ReactNode;  
     rating: string | number;
-    onClick: () => void; 
+    onClick?: () => void; 
 }
 
 const ProviderCard: React.FC<ProviderCardProps> = ({
