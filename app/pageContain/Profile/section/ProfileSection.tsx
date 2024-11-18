@@ -62,7 +62,6 @@ const ProfileSection = () => {
 
             formData.append('id', userId || '');
             formData.append('first_name', data.first_name || '');
-            formData.append('last_name', data.last_name || '');
             formData.append('email', data.email || '');
             formData.append('phone_number', data.phone_number || '');
             formData.append('date_of_birth', data.date_of_birth || '');
@@ -98,10 +97,10 @@ const ProfileSection = () => {
     const handleImageChange = (event) => {
         const file = event.target.files[0];
 
-        if (file) {
+        if (file) {            
             const imageURL = URL.createObjectURL(file);
             setSelectedImage(imageURL);
-            setSelectedFile(file?.name);
+            setSelectedFile(file);
         }
     };
 
