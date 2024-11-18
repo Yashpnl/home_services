@@ -29,7 +29,7 @@ type ContextType = {
     setFilters: Dispatch<SetStateAction<FilterState>>;
     userInfo: any;
     homeserviceToken: string | null;
-    setHomeserviceToken: (value: string) => void;
+    setHomeserviceToken: (value: string | null) => void;
     confirmationResult: ConfirmationResult | null;
     setConfirmationResult: React.Dispatch<React.SetStateAction<null | ConfirmationResult>>
 }

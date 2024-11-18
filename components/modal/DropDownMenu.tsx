@@ -4,21 +4,26 @@ import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { FiLoader } from 'react-icons/fi';
+import { useGlobalContext } from '@/Context/GlobalContext';
 
 const DropDownMenu = () => {
 
     const router = useRouter();
     const [loading, setLoading] = useState(false)
+    const {setHomeserviceToken} = useGlobalContext()
 
     const handleLogout = () => {
         setLoading(true)
         // Remove items from localStorage
-        localStorage.removeItem('homeservice_token');
+        localStorage.removeItem('homeservice_userData');
         localStorage.removeItem('google_home_services');
 
         // Remove cookie
         Cookies.remove('homeservice_token');
         Cookies.remove('google_home_services');
+
+        // Remove from store
+        setHomeserviceToken(null)
 
         // Redirect to /signin
         router.push('/signin');

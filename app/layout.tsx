@@ -6,6 +6,7 @@ import GlobalProvider from "@/Context/GlobalContext";
 import Header from "@/components/header/Header";
 import Footer from "@/components/footer/Footer";
 import { cookies } from "next/headers";
+import LayoutHandler from "./layoutHandler";
 
 const raleway = Raleway({
   subsets: ["latin"],
@@ -32,19 +33,9 @@ export default function RootLayout({
         <NextTopLoader color="#F9AA58" />
         <Toaster />
         <GlobalProvider>
-          {token ?
-            <div className="h-screen flex flex-col">
-              <Header />
-              <div className="flex-grow">
-                {children}
-              </div>
-              <Footer />
-            </div>
-            :
-            <>
-              {children}
-            </>
-          }
+          <LayoutHandler>
+            {children}
+          </LayoutHandler>
         </GlobalProvider>
       </body>
     </html>
