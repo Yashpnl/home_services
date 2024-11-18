@@ -55,7 +55,7 @@ const ServiceProviderInfo = ({ handlePackges, provider }: ProviderInfoProps) => 
                 {Object.keys(schedule).map((day) => (
                   <div
                     key={day}
-                    className="cursor-pointer p-2 hover:bg-gray-100"
+                    className="cursor-pointer p-2 hover:bg-primary rounded-md hover:text-white"
                     onClick={() => handleDaySelect(day)}
                   >
                     {day.charAt(0).toUpperCase() + day.slice(1)}

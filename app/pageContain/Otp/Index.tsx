@@ -14,30 +14,77 @@ import {
 } from "@/components/ui/input-otp"
 import { FiLoader } from 'react-icons/fi';
 import { useGlobalContext } from '@/Context/GlobalContext';
+import axios from 'axios';
+import Cookies from "js-cookie";
 
 const Otp = () => {
 
     const router = useRouter();
     const [otp, setOtp] = useState('');
     const [loading, setLoading] = useState(false)
-    const { confirmationResult } = useGlobalContext();
+    const { confirmationResult, setHomeserviceToken } = useGlobalContext();
+    const [error, setError] = useState<string | null>(null);
+
+    // Extract form data from session storage
+    const [first_name, setFirstName] = useState<string | null>(null);
+    const [email, setEmail] = useState<string | null>(null);
+    const [password, setPassword] = useState<string | null>(null);
+    const [country_code, setCountryCode] = useState<string | null>(null);
+    const [phone_number, setPhoneNumber] = useState<string | null>(null);
+
+    useEffect(() => {
+        setFirstName(sessionStorage.getItem('first_name'));
+        setEmail(sessionStorage.getItem('email'));
+        setPassword(sessionStorage.getItem('password'));
+        setCountryCode(sessionStorage.getItem('country_code'));
+        setPhoneNumber(sessionStorage.getItem('phone_number'));
+    }, []);
 
     const verifyOtp = async () => {
 
         if (confirmationResult) {
-
             setLoading(true)
             try {
                 await confirmationResult.confirm(otp);
-                toast.success("Verification successful! User signed in");
+                await registerApi();
                 setLoading(false)
-                router.push("/");
             } catch (error) {
                 setLoading(false)
                 console.error("Error verifying OTP:", error);
+                toast.error("Verification failed. Please try again.");
+            } finally {
+                setLoading(false);
             }
         }
     };
+
+    const registerApi = async () => {
+        const formData = { first_name, email, password, phone_number, country_code };
+        
+        const response = await axios.post(
+            `${process.env.NEXT_PUBLIC_API_URL}/users/customer_register`,
+            formData,
+            { headers: { 'Content-Type': 'application/json' } }
+        );
+
+        if (response?.data?.success) {
+            toast.success("Registration successful")
+            Cookies.set("homeservice_token", response?.data?.data?.token);
+            const userData = {
+                token: response?.data?.data?.token,
+                username: response?.data?.data?.customer?.firstName,
+                userId: response?.data?.data?.customer?.id
+            };
+
+            localStorage.setItem("homeservice_userData", JSON.stringify(userData));
+            setHomeserviceToken(response?.data?.data?.token)
+            router.push("/");
+        } else {
+            setError('Sign-up failed. Please try again.');
+            toast.error('Sign-up failed. Please try again.');
+        }
+    }
+
 
     return (
         <main className="container w-full min-h-screen grid xl:grid-cols-2 lg:gap-28 place-content-center bg-white px-5 sm:px-10">

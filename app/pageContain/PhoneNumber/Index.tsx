@@ -6,24 +6,12 @@ import { Button } from '@/components/ui/button';
 import { useRouter } from 'next/navigation';
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import toast from 'react-hot-toast';
-import axios from 'axios';
 import { auth } from '@/lib/firebase';
 import { RecaptchaVerifier, signInWithPhoneNumber } from 'firebase/auth';
 import { FiLoader } from 'react-icons/fi';
 import { useGlobalContext } from '@/Context/GlobalContext';
-import Cookies from "js-cookie";
-
-interface UserData {
-    token: string;
-}
-
-interface ApiResponse {
-    success: boolean;
-    message?: string;
-    data?: UserData;
-}
 
 const PhoneNumber = () => {
 
@@ -31,19 +19,7 @@ const PhoneNumber = () => {
     const [error, setError] = useState<string | null>(null);
     const router = useRouter();
     const [loading, setLoading] = useState(false)
-    const { setConfirmationResult, setHomeserviceToken } = useGlobalContext();
-
-    // Extract form data from session storage
-    const [first_name, setFirstName] = useState<string | null>(null);
-    const [email, setEmail] = useState<string | null>(null);
-    const [password, setPassword] = useState<string | null>(null);
-
-    useEffect(() => {
-        setFirstName(sessionStorage.getItem('first_name'));
-        setEmail(sessionStorage.getItem('email'));
-        setPassword(sessionStorage.getItem('password'));
-    }, []);
-
+    const { setConfirmationResult } = useGlobalContext();
 
     const extractPhoneDetails = (fullPhoneNumber: string) => {
         const countryCode = fullPhoneNumber.substring(0, fullPhoneNumber.length - 10);
@@ -60,36 +36,18 @@ const PhoneNumber = () => {
 
         setError(null);
         const { country_code, phone_number } = extractPhoneDetails(phone);
-        const formData = { first_name, email, password, phone_number, country_code };
+        sessionStorage.setItem('country_code', country_code);
+        sessionStorage.setItem('phone_number', phone_number);
 
         try {
             setLoading(true)
-            const response = await axios.post(
-                `${process.env.NEXT_PUBLIC_API_URL}/users/customer_register`,
-                formData,
-                { headers: { 'Content-Type': 'application/json' } }
-            );
-
-            if (response.data?.success) {
-                Cookies.set("homeservice_token", response?.data?.data?.token);
-                const userData = {
-                    token: response?.data?.data?.token,
-                    username: response?.data?.data?.customer?.firstName,
-                    userId: response?.data?.data?.customer?.id
-                };
-
-                localStorage.setItem("homeservice_userData", JSON.stringify(userData));
-                setHomeserviceToken(response?.data?.data?.token)
-                if (phone_number) {
-                    const recaptcha = new RecaptchaVerifier(auth, "recaptcha", { size: "invisible" });
-                    const confirmationResult = await signInWithPhoneNumber(auth, `+${country_code}` + phone_number, recaptcha);
-                    setConfirmationResult(confirmationResult);
-                    router.push('/otp');
-                }
-            } else {
-                setError('Sign-up failed. Please try again.');
+            if (phone_number) {
+                const recaptcha = new RecaptchaVerifier(auth, "recaptcha", { size: "invisible" });
+                const confirmationResult = await signInWithPhoneNumber(auth, `+${country_code}` + phone_number, recaptcha);
+                setConfirmationResult(confirmationResult);
+                setLoading(false)
+                router.push('/otp');
             }
-            setLoading(false)
         } catch (error: any) {
             setLoading(false)
             toast.error(error.response?.data?.message || 'An error occurred. Please try again.');
